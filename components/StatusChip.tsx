@@ -5,14 +5,12 @@ const VARIANT: Record<CapacityStatus, string> = {
   available: "bg-good-soft text-good",
   almostFull: "bg-warn-soft text-warn",
   full: "bg-bad-soft text-bad",
-  mainHall: "bg-paper-dim text-ink-dim",
 };
 
 const KEY: Record<CapacityStatus, string> = {
   available: "status.available",
   almostFull: "status.almostFull",
   full: "status.full",
-  mainHall: "status.mainHallOpen",
 };
 
 export function StatusChip({ status, locale }: { status: CapacityStatus; locale: Locale }) {

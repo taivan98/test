@@ -6,6 +6,8 @@ export type ProgramItemView = {
   id: string;
   blockId: string;
   type: "WORKSHOP" | "MAIN_HALL";
+  kindHr: string;
+  kindEn: string;
   titleHr: string;
   titleEn: string;
   descriptionHr: string;
@@ -105,6 +107,8 @@ export async function getProgram(participantId: string | null): Promise<DayView[
           id: item.id,
           blockId: item.blockId,
           type: item.type,
+          kindHr: item.kindHr,
+          kindEn: item.kindEn,
           titleHr: item.titleHr,
           titleEn: item.titleEn,
           descriptionHr: item.descriptionHr,

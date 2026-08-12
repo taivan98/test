@@ -60,6 +60,7 @@ export default async function ProgramPage({
               {block.items.map((item) => {
                 const status = capacityStatus(item.confirmedCount, item.capacity);
                 const title = locale === "hr" ? item.titleHr : item.titleEn;
+                const kind = locale === "hr" ? item.kindHr : item.kindEn;
                 return (
                   <Link
                     key={item.id}
@@ -68,8 +69,19 @@ export default async function ProgramPage({
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
+                        {kind && (
+                          <div className="text-[10.5px] font-mono uppercase tracking-wide text-accent mb-0.5">
+                            {kind}
+                          </div>
+                        )}
                         <div className="font-semibold text-[15px]">{title}</div>
-                        {item.room && <div className="text-xs text-ink-dim mt-0.5">{item.room}</div>}
+                        {(item.room || item.speaker) && (
+                          <div className="text-xs text-ink-dim mt-0.5 flex flex-wrap gap-x-1.5">
+                            {item.room && <span>{item.room}</span>}
+                            {item.room && item.speaker && <span>·</span>}
+                            {item.speaker && <span>{item.speaker}</span>}
+                          </div>
+                        )}
                       </div>
                       <StatusChip status={status} locale={locale} />
                     </div>

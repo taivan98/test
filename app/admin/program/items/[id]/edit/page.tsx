@@ -22,11 +22,17 @@ export default async function EditProgramItemPage({ params }: { params: Promise<
         <form action="/api/admin/program-items/update" method="POST" className="flex flex-col gap-3">
           <input type="hidden" name="id" value={item.id} />
 
-          <label className="text-sm font-medium">Vrsta</label>
+          <label className="text-sm font-medium">Ograničenje mjesta</label>
           <select name="type" defaultValue={item.type} className="rounded-lg border border-border px-3 py-2 text-sm">
-            <option value="WORKSHOP">Radionica (ima kapacitet)</option>
-            <option value="MAIN_HALL">Glavna dvorana (uvijek otvorena)</option>
+            <option value="WORKSHOP">Ima ograničen broj mjesta</option>
+            <option value="MAIN_HALL">Bez limita mjesta (npr. glavna dvorana)</option>
           </select>
+
+          <label className="text-sm font-medium">Vrsta (HR) — npr. Radionica, Panel, Predavanje</label>
+          <input name="kindHr" defaultValue={item.kindHr} className="rounded-lg border border-border px-3 py-2 text-sm" />
+
+          <label className="text-sm font-medium">Format (EN) — e.g. Workshop, Panel, Talk</label>
+          <input name="kindEn" defaultValue={item.kindEn} className="rounded-lg border border-border px-3 py-2 text-sm" />
 
           <label className="text-sm font-medium">Naziv (HR)</label>
           <input name="titleHr" defaultValue={item.titleHr} required className="rounded-lg border border-border px-3 py-2 text-sm" />

@@ -28,6 +28,7 @@ export default async function SessionPage({
   const conferenceName = process.env.CONFERENCE_NAME || "Konferencija";
   const status = capacityStatus(item.confirmedCount, item.capacity);
   const title = locale === "hr" ? item.titleHr : item.titleEn;
+  const kind = locale === "hr" ? item.kindHr : item.kindEn;
   const description = locale === "hr" ? item.descriptionHr : item.descriptionEn;
   const conflictTitle = locale === "hr" ? conflictHr : conflictEn;
 
@@ -42,6 +43,9 @@ export default async function SessionPage({
         <div className="mt-3 mb-1 text-xs font-mono uppercase tracking-wide text-ink-dim">
           {locale === "hr" ? day.labelHr : day.labelEn} · {block.startLabel}–{block.endLabel}
         </div>
+        {kind && (
+          <div className="text-[11px] font-mono uppercase tracking-wide text-accent mb-1">{kind}</div>
+        )}
         <h1 className="text-2xl font-semibold mb-2">{title}</h1>
 
         <div className="flex items-center gap-2 mb-4">

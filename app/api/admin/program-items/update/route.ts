@@ -10,6 +10,8 @@ export async function POST(req: NextRequest) {
   const form = await req.formData();
   const id = String(form.get("id") || "");
   const type = String(form.get("type") || "WORKSHOP") === "MAIN_HALL" ? "MAIN_HALL" : "WORKSHOP";
+  const kindHr = String(form.get("kindHr") || "");
+  const kindEn = String(form.get("kindEn") || "");
   const titleHr = String(form.get("titleHr") || "");
   const titleEn = String(form.get("titleEn") || "");
   const descriptionHr = String(form.get("descriptionHr") || "");
@@ -21,7 +23,7 @@ export async function POST(req: NextRequest) {
 
   await prisma.programItem.update({
     where: { id },
-    data: { type, titleHr, titleEn, descriptionHr, descriptionEn, speaker, room, capacity },
+    data: { type, kindHr, kindEn, titleHr, titleEn, descriptionHr, descriptionEn, speaker, room, capacity },
   });
 
   return NextResponse.redirect(new URL("/admin/program", origin));

@@ -41,6 +41,9 @@ model ProgramItem {
   blockId         String
   block           Block           @relation(fields: [blockId], references: [id], onDelete: Cascade)
   type            ProgramItemType @default(WORKSHOP)
+  // free-text session format shown next to the title, e.g. "Radionica" / "Panel" / "Predavanje"
+  kindHr          String          @default("")
+  kindEn          String          @default("")
   titleHr         String
   titleEn         String
   descriptionHr   String          @default("")

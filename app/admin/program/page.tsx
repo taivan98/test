@@ -61,10 +61,16 @@ export default async function AdminProgramPage() {
                         className="flex items-center justify-between gap-3 rounded-lg bg-paper px-3 py-2 text-sm"
                       >
                         <div>
+                          {item.kindHr && (
+                            <span className="text-[10px] font-mono uppercase tracking-wide text-accent mr-1.5">
+                              {item.kindHr}
+                            </span>
+                          )}
                           <span className="font-medium">{item.titleHr}</span>{" "}
                           <span className="text-ink-dim">
-                            · {item.type === "MAIN_HALL" ? "Glavna dvorana" : `${item.capacity ?? "?"} mjesta`}
+                            · {item.type === "MAIN_HALL" ? "bez limita" : `${item.capacity ?? "?"} mjesta`}
                             {item.room ? ` · ${item.room}` : ""}
+                            {item.speaker ? ` · ${item.speaker}` : ""}
                           </span>
                         </div>
                         <div className="flex items-center gap-3 shrink-0">
@@ -90,9 +96,11 @@ export default async function AdminProgramPage() {
                     <form action="/api/admin/program-items" method="POST" className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       <input type="hidden" name="blockId" value={block.id} />
                       <select name="type" className="rounded-lg border border-border px-3 py-2 text-sm sm:col-span-2" defaultValue="WORKSHOP">
-                        <option value="WORKSHOP">Radionica (ima kapacitet)</option>
-                        <option value="MAIN_HALL">Glavna dvorana (uvijek otvorena)</option>
+                        <option value="WORKSHOP">Ima ograničen broj mjesta</option>
+                        <option value="MAIN_HALL">Bez limita mjesta (npr. glavna dvorana)</option>
                       </select>
+                      <input name="kindHr" placeholder="Vrsta (HR) — npr. Radionica, Panel, Predavanje" className="rounded-lg border border-border px-3 py-2 text-sm" />
+                      <input name="kindEn" placeholder="Format (EN) — e.g. Workshop, Panel, Talk" className="rounded-lg border border-border px-3 py-2 text-sm" />
                       <input name="titleHr" placeholder="Naziv (HR)" required className="rounded-lg border border-border px-3 py-2 text-sm" />
                       <input name="titleEn" placeholder="Title (EN)" required className="rounded-lg border border-border px-3 py-2 text-sm" />
                       <textarea name="descriptionHr" placeholder="Opis (HR)" className="rounded-lg border border-border px-3 py-2 text-sm sm:col-span-2" rows={2} />

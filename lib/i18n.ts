@@ -49,7 +49,6 @@ export const dictionaries: Record<Locale, Dict> = {
     "status.available": "Slobodno",
     "status.almostFull": "Skoro puno",
     "status.full": "Puno",
-    "status.mainHallOpen": "Uvijek otvorena",
     "status.registered": "Prijavljeno",
     "status.waitlisted": "Na listi čekanja",
 
@@ -138,7 +137,6 @@ export const dictionaries: Record<Locale, Dict> = {
     "status.available": "Open",
     "status.almostFull": "Almost full",
     "status.full": "Full",
-    "status.mainHallOpen": "Always open",
     "status.registered": "Registered",
     "status.waitlisted": "Waitlisted",
 

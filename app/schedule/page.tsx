@@ -108,6 +108,7 @@ function ScheduleRow({
   isLast: boolean;
 }) {
   const title = locale === "hr" ? item.titleHr : item.titleEn;
+  const kind = locale === "hr" ? item.kindHr : item.kindEn;
   const event = toCalendarEvent(item, block, day, locale);
 
   return (
@@ -126,7 +127,12 @@ function ScheduleRow({
           className="block ml-4 bg-paper-card border border-border rounded-xl px-4 py-3 hover:border-accent transition"
         >
           <div className="flex items-start justify-between gap-3">
-            <div className="font-semibold text-[15px]">{title}</div>
+            <div>
+              {kind && (
+                <div className="text-[10.5px] font-mono uppercase tracking-wide text-accent mb-0.5">{kind}</div>
+              )}
+              <div className="font-semibold text-[15px]">{title}</div>
+            </div>
             {item.myStatus === "registered" && (
               <span className="shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-good-soft text-good">
                 {t(locale, "schedule.confirmed")}
