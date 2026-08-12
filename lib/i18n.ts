@@ -72,6 +72,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "schedule.empty": "Još nisi prijavljen/a ni na jednu radionicu.",
     "schedule.browseProgram": "Pregledaj program",
     "schedule.confirmed": "Potvrđeno",
+    "schedule.downloadAll": "Preuzmi cijeli raspored (.ics)",
+    "schedule.addIcs": "Dodaj u kalendar",
+    "schedule.addGoogle": "Google Calendar",
+    "schedule.waitlistCalendarNote": "Dodavanje u kalendar bit će dostupno čim potvrdiš mjesto.",
 
     "waitlist.emailSubject": "Oslobodilo se mjesto: {title}",
     "waitlist.emailBody":
@@ -157,6 +161,10 @@ export const dictionaries: Record<Locale, Dict> = {
     "schedule.empty": "You haven't registered for any workshop yet.",
     "schedule.browseProgram": "Browse the program",
     "schedule.confirmed": "Confirmed",
+    "schedule.downloadAll": "Download full schedule (.ics)",
+    "schedule.addIcs": "Add to calendar",
+    "schedule.addGoogle": "Google Calendar",
+    "schedule.waitlistCalendarNote": "Adding to your calendar will be available once your seat is confirmed.",
 
     "waitlist.emailSubject": "A seat opened up: {title}",
     "waitlist.emailBody":
