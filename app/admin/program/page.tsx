@@ -132,12 +132,20 @@ export default async function AdminProgramPage() {
                                 </div>
                               )}
                               {item.capacity != null && (
-                                <form action="/api/admin/dev/fill-to-one-seat" method="POST" className="mt-2 pt-2 border-t border-border">
-                                  <input type="hidden" name="programItemId" value={item.id} />
-                                  <button type="submit" className="text-xs text-accent hover:underline">
-                                    Testno: popuni do 1 slobodnog mjesta (lažni sudionici)
-                                  </button>
-                                </form>
+                                <div className="mt-2 pt-2 border-t border-border flex flex-wrap gap-x-4 gap-y-1">
+                                  <form action="/api/admin/dev/fill-to-one-seat" method="POST">
+                                    <input type="hidden" name="programItemId" value={item.id} />
+                                    <button type="submit" className="text-xs text-accent hover:underline">
+                                      Testno: popuni do 1 slobodnog mjesta (lažni sudionici)
+                                    </button>
+                                  </form>
+                                  <form action="/api/admin/dev/fill-completely" method="POST">
+                                    <input type="hidden" name="programItemId" value={item.id} />
+                                    <button type="submit" className="text-xs text-accent hover:underline">
+                                      Testno: popuni potpuno (lažni sudionici)
+                                    </button>
+                                  </form>
+                                </div>
                               )}
                             </div>
                           </details>
