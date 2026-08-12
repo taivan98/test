@@ -18,12 +18,13 @@ export async function POST(req: NextRequest) {
   const descriptionEn = String(form.get("descriptionEn") || "");
   const speaker = String(form.get("speaker") || "");
   const room = String(form.get("room") || "");
+  const detailsUrl = String(form.get("detailsUrl") || "");
   const capacityRaw = String(form.get("capacity") || "").trim();
   const capacity = capacityRaw === "" ? null : Math.max(0, parseInt(capacityRaw, 10) || 0);
 
   const order = await prisma.programItem.count({ where: { blockId } });
   await prisma.programItem.create({
-    data: { blockId, type, kindHr, kindEn, titleHr, titleEn, descriptionHr, descriptionEn, speaker, room, capacity, order },
+    data: { blockId, type, kindHr, kindEn, titleHr, titleEn, descriptionHr, descriptionEn, speaker, room, detailsUrl, capacity, order },
   });
 
   return NextResponse.redirect(new URL("/admin/program", origin));

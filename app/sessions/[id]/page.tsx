@@ -70,7 +70,18 @@ export default async function SessionPage({
           </dl>
         )}
 
-        {description && <p className="text-sm leading-relaxed mb-5">{description}</p>}
+        {description && <p className="text-sm leading-relaxed mb-3">{description}</p>}
+
+        {item.detailsUrl && (
+          <a
+            href={item.detailsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline mb-5"
+          >
+            {t(locale, "session.moreDetails")} ↗
+          </a>
+        )}
 
         {item.capacity != null && (
           <div className="mb-6">

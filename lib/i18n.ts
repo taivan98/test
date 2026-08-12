@@ -66,6 +66,7 @@ export const dictionaries: Record<Locale, Dict> = {
       "Već si prijavljen/a na drugu sesiju u ovom bloku ({title}). Prvo se odjavi s nje.",
     "session.fullJoinWaitlist":
       "Radionica je puna. Možeš se pridružiti listi čekanja — javit ćemo ti se ako se mjesto oslobodi.",
+    "session.moreDetails": "Više o sesiji i predavaču",
 
     "schedule.title": "Moje prijave",
     "schedule.empty": "Još nisi prijavljen/a ni na jednu radionicu.",
@@ -154,6 +155,7 @@ export const dictionaries: Record<Locale, Dict> = {
       "You're already registered for another session in this block ({title}). Cancel it first.",
     "session.fullJoinWaitlist":
       "This workshop is full. You can join the waitlist — we'll email you if a seat frees up.",
+    "session.moreDetails": "More about this session & speaker",
 
     "schedule.title": "My schedule",
     "schedule.empty": "You haven't registered for any workshop yet.",

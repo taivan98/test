@@ -14,6 +14,7 @@ export type ProgramItemView = {
   descriptionEn: string;
   speaker: string;
   room: string;
+  detailsUrl: string;
   capacity: number | null;
   confirmedCount: number;
   myStatus: ItemStatus;
@@ -115,6 +116,7 @@ export async function getProgram(participantId: string | null): Promise<DayView[
           descriptionEn: item.descriptionEn,
           speaker: item.speaker,
           room: item.room,
+          detailsUrl: item.detailsUrl,
           capacity: item.capacity,
           confirmedCount: item._count.registrations,
           myStatus,

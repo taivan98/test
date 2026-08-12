@@ -61,6 +61,15 @@ export default async function EditProgramItemPage({ params }: { params: Promise<
             className="rounded-lg border border-border px-3 py-2 text-sm"
           />
 
+          <label className="text-sm font-medium">Poveznica na opis/biografiju (na webu, otvara se u novoj kartici)</label>
+          <input
+            name="detailsUrl"
+            type="url"
+            defaultValue={item.detailsUrl}
+            placeholder="https://hrdays.net/program-2026/..."
+            className="rounded-lg border border-border px-3 py-2 text-sm"
+          />
+
           <button type="submit" className="mt-2 rounded-lg bg-accent text-accent-ink font-semibold py-2.5 text-sm">
             Spremi promjene
           </button>

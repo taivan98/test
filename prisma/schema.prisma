@@ -50,6 +50,8 @@ model ProgramItem {
   descriptionEn   String          @default("")
   speaker         String          @default("")
   room            String          @default("")
+  // optional link to the full description/speaker bio on the conference website, opens in a new tab
+  detailsUrl      String          @default("")
   // null capacity = no hard limit (used for MAIN_HALL)
   capacity        Int?
   order           Int
