@@ -52,6 +52,9 @@ model ProgramItem {
   room            String          @default("")
   // optional link to the full description/speaker bio on the conference website, opens in a new tab
   detailsUrl      String          @default("")
+  // false for single-track/informational items everyone attends by default
+  // (e.g. plenary keynote days) — hides the register button entirely
+  registrationRequired Boolean    @default(true)
   // null capacity = no hard limit (used for MAIN_HALL)
   capacity        Int?
   order           Int

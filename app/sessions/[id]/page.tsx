@@ -49,8 +49,14 @@ export default async function SessionPage({
         <h1 className="text-2xl font-semibold mb-2">{title}</h1>
 
         <div className="flex items-center gap-2 mb-4">
-          <StatusChip status={status} locale={locale} />
-          {item.myStatus === "registered" && (
+          {item.registrationRequired ? (
+            <StatusChip status={status} locale={locale} />
+          ) : (
+            <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-paper-dim text-ink-dim">
+              {t(locale, "session.noRegistrationNeeded")}
+            </span>
+          )}
+          {item.registrationRequired && item.myStatus === "registered" && (
             <span className="text-xs font-semibold text-good">✓ {t(locale, "status.registered")}</span>
           )}
         </div>
@@ -83,7 +89,7 @@ export default async function SessionPage({
           </a>
         )}
 
-        {item.capacity != null && (
+        {item.registrationRequired && item.capacity != null && (
           <div className="mb-6">
             <CapacityBar confirmedCount={item.confirmedCount} capacity={item.capacity} />
             <div className="text-xs text-ink-dim font-mono mt-1.5">
@@ -104,7 +110,10 @@ export default async function SessionPage({
         )}
 
         <div className="flex flex-col gap-2.5">
-          {item.myStatus === "registered" && (
+          {!item.registrationRequired && (
+            <p className="text-sm text-ink-dim">{t(locale, "session.noRegistrationNeeded")}</p>
+          )}
+          {item.registrationRequired && item.myStatus === "registered" && (
             <form action="/api/registrations/cancel" method="POST">
               <input type="hidden" name="programItemId" value={item.id} />
               <button
@@ -116,7 +125,7 @@ export default async function SessionPage({
             </form>
           )}
 
-          {item.myStatus === "waiting" && (
+          {item.registrationRequired && item.myStatus === "waiting" && (
             <>
               <div className="text-sm font-medium text-warn">
                 {t(locale, "session.waitlistPosition", { position: item.myWaitlistPosition ?? "?" })}
@@ -133,7 +142,7 @@ export default async function SessionPage({
             </>
           )}
 
-          {item.myStatus === "offered" && (
+          {item.registrationRequired && item.myStatus === "offered" && (
             <>
               <div className="text-sm font-medium text-warn">{t(locale, "status.waitlisted")}</div>
               <form action="/api/waitlist/leave" method="POST">
@@ -148,7 +157,7 @@ export default async function SessionPage({
             </>
           )}
 
-          {item.myStatus === "none" && status !== "full" && (
+          {item.registrationRequired && item.myStatus === "none" && status !== "full" && (
             <form action="/api/registrations" method="POST">
               <input type="hidden" name="programItemId" value={item.id} />
               <button
@@ -160,7 +169,7 @@ export default async function SessionPage({
             </form>
           )}
 
-          {item.myStatus === "none" && status === "full" && (
+          {item.registrationRequired && item.myStatus === "none" && status === "full" && (
             <form action="/api/waitlist/join" method="POST">
               <input type="hidden" name="programItemId" value={item.id} />
               <button

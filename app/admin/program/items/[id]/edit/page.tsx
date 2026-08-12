@@ -70,6 +70,17 @@ export default async function EditProgramItemPage({ params }: { params: Promise<
             className="rounded-lg border border-border px-3 py-2 text-sm"
           />
 
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              name="registrationRequired"
+              value="true"
+              defaultChecked={item.registrationRequired}
+              className="rounded border-border"
+            />
+            Sudionici se moraju prijaviti (isključi za predavanja koja svi automatski prate)
+          </label>
+
           <button type="submit" className="mt-2 rounded-lg bg-accent text-accent-ink font-semibold py-2.5 text-sm">
             Spremi promjene
           </button>

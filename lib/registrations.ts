@@ -42,7 +42,7 @@ async function findConfirmedConflict(
 /** Registers a participant for an item, or throws FullError / BlockConflictError. */
 export async function registerForItem(participantId: string, programItemId: string) {
   const item = await prisma.programItem.findUnique({ where: { id: programItemId } });
-  if (!item) throw new NotFoundError();
+  if (!item || !item.registrationRequired) throw new NotFoundError();
 
   const existing = await prisma.registration.findUnique({
     where: { participantId_programItemId: { participantId, programItemId } },
@@ -118,7 +118,7 @@ export async function cancelRegistration(participantId: string, programItemId: s
 
 export async function joinWaitlist(participantId: string, programItemId: string) {
   const item = await prisma.programItem.findUnique({ where: { id: programItemId } });
-  if (!item) throw new NotFoundError();
+  if (!item || !item.registrationRequired) throw new NotFoundError();
   if (item.capacity == null) return null; // main hall never needs a waitlist
 
   const alreadyReg = await prisma.registration.findUnique({

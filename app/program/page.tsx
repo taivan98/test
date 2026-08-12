@@ -83,19 +83,25 @@ export default async function ProgramPage({
                           </div>
                         )}
                       </div>
-                      <StatusChip status={status} locale={locale} />
+                      {item.registrationRequired ? (
+                        <StatusChip status={status} locale={locale} />
+                      ) : (
+                        <span className="shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-paper-dim text-ink-dim">
+                          {t(locale, "session.noRegistrationNeeded")}
+                        </span>
+                      )}
                     </div>
-                    {item.myStatus === "registered" && (
+                    {item.registrationRequired && item.myStatus === "registered" && (
                       <div className="text-xs text-good font-medium mt-2">
                         ✓ {t(locale, "status.registered")}
                       </div>
                     )}
-                    {item.myStatus === "waiting" && (
+                    {item.registrationRequired && item.myStatus === "waiting" && (
                       <div className="text-xs text-warn font-medium mt-2">
                         {t(locale, "session.waitlistPosition", { position: item.myWaitlistPosition ?? "?" })}
                       </div>
                     )}
-                    {item.capacity != null && (
+                    {item.registrationRequired && item.capacity != null && (
                       <div className="mt-2.5 flex items-center gap-2">
                         <div className="flex-1">
                           <CapacityBar confirmedCount={item.confirmedCount} capacity={item.capacity} />

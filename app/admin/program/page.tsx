@@ -109,6 +109,10 @@ export default async function AdminProgramPage() {
                       <input name="room" placeholder="Dvorana" className="rounded-lg border border-border px-3 py-2 text-sm" />
                       <input name="capacity" type="number" min={0} placeholder="Kapacitet (prazno = bez limita)" className="rounded-lg border border-border px-3 py-2 text-sm" />
                       <input name="detailsUrl" type="url" placeholder="Poveznica na opis/biografiju (na webu)" className="rounded-lg border border-border px-3 py-2 text-sm" />
+                      <label className="flex items-center gap-2 text-sm sm:col-span-2">
+                        <input type="checkbox" name="registrationRequired" value="true" defaultChecked className="rounded border-border" />
+                        Sudionici se moraju prijaviti (isključi za predavanja koja svi automatski prate)
+                      </label>
                       <button type="submit" className="rounded-lg bg-accent text-accent-ink font-semibold py-2 text-sm sm:col-span-2">
                         Dodaj sesiju
                       </button>
