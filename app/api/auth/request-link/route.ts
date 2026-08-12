@@ -42,7 +42,16 @@ export async function POST(req: NextRequest) {
   });
 
   const link = new URL(`/verify?token=${raw}`, origin).toString();
-  await sendMagicLinkEmail(email, link, locale);
+
+  try {
+    await sendMagicLinkEmail(email, link, locale);
+  } catch (err) {
+    console.error("[request-link] failed to send magic-link email:", err);
+    const url = new URL("/login", origin);
+    url.searchParams.set("status", "send_failed");
+    url.searchParams.set("email", email);
+    return NextResponse.redirect(url);
+  }
 
   const url = new URL("/login", origin);
   url.searchParams.set("status", "sent");

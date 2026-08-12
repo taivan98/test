@@ -53,7 +53,7 @@ export default async function LoginPage({
                   </p>
                 </div>
               )}
-              {status === "invalid" && (
+              {(status === "invalid" || status === "send_failed") && (
                 <div className="mb-4 rounded-lg bg-bad-soft border border-bad/30 p-3 text-sm text-bad">
                   {t(locale, "common.error")}
                 </div>
