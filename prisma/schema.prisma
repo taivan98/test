@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// A conference day, e.g. "Dan 1 / Day 1 - 15.10.2026"
+model Day {
+  id       String  @id @default(cuid())
+  date     DateTime
+  labelHr  String
+  labelEn  String
+  order    Int
+  blocks   Block[]
+}
+
+// A time slot within a day where several sessions run in parallel,
+// e.g. 10:00-11:30
+model Block {
+  id           String        @id @default(cuid())
+  dayId        String
+  day          Day           @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  startLabel   String
+  endLabel     String
+  order        Int
+  programItems ProgramItem[]
+}
+
+enum ProgramItemType {
+  WORKSHOP
+  MAIN_HALL
+}
+
+// One parallel option inside a block: a workshop with a hard capacity,
+// or the main hall talk, which never turns people away.
+model ProgramItem {
+  id              String          @id @default(cuid())
+  blockId         String
+  block           Block           @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  type            ProgramItemType @default(WORKSHOP)
+  titleHr         String
+  titleEn         String
+  descriptionHr   String          @default("")
+  descriptionEn   String          @default("")
+  speaker         String          @default("")
+  room            String          @default("")
+  // null capacity = no hard limit (used for MAIN_HALL)
+  capacity        Int?
+  order           Int
+  registrations   Registration[]
+  waitlistEntries WaitlistEntry[]
+}
+
+// Someone allowed to register because they paid the conference fee.
+// The organizer uploads/pastes this list; it gates magic-link access.
+model ApprovedEmail {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  note      String   @default("")
+  createdAt DateTime @default(now())
+}
+
+model Participant {
+  id              String          @id @default(cuid())
+  email           String          @unique
+  name            String          @default("")
+  locale          String          @default("hr")
+  createdAt       DateTime        @default(now())
+  registrations   Registration[]
+  waitlistEntries WaitlistEntry[]
+  magicLinkTokens MagicLinkToken[]
+}
+
+// Passwordless login: a single-use, short-lived token emailed to the participant.
+model MagicLinkToken {
+  id            String      @id @default(cuid())
+  tokenHash     String      @unique
+  participantId String
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  expiresAt     DateTime
+  usedAt        DateTime?
+  createdAt     DateTime    @default(now())
+}
+
+// A confirmed seat in a program item.
+model Registration {
+  id            String      @id @default(cuid())
+  participantId String
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  programItemId String
+  programItem   ProgramItem @relation(fields: [programItemId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+
+  @@unique([participantId, programItemId])
+}
+
+enum WaitlistStatus {
+  WAITING   // in the queue
+  OFFERED   // notified, holding a time-limited claim on a freed seat
+  EXPIRED   // missed the confirmation window, offer moved on
+  CONFIRMED // claimed the seat, became a Registration
+  CANCELLED // participant left the waitlist voluntarily
+}
+
+// FCFS queue for a full workshop. When a seat frees up, the oldest WAITING
+// entry is OFFERED the seat with a 15-minute claim window.
+model WaitlistEntry {
+  id            String         @id @default(cuid())
+  participantId String
+  participant   Participant    @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  programItemId String
+  programItem   ProgramItem    @relation(fields: [programItemId], references: [id], onDelete: Cascade)
+  status        WaitlistStatus @default(WAITING)
+  offeredAt     DateTime?
+  offerExpiresAt DateTime?
+  // hash of the single-use token emailed to claim the offered seat
+  offerTokenHash String?       @unique
+  createdAt     DateTime       @default(now())
+  resolvedAt    DateTime?
+}
+
+// Organizer admin session (single shared admin password, see lib/adminAuth.ts).
+model AdminToken {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

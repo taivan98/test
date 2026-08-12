@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #f4f5f8;
+  --paper-card: #ffffff;
+  --paper-dim: #e7e9f0;
+  --border: #d9dbe4;
+  --ink: #1b1d24;
+  --ink-dim: #5b5f6f;
+  --accent: #5b4fe8;
+  --accent-soft: #ece9fd;
+  --accent-ink: #ffffff;
+  --good: #1f9d6c;
+  --good-soft: #e1f5ec;
+  --warn: #a8730f;
+  --warn-soft: #faedd2;
+  --bad: #c23b3b;
+  --bad-soft: #fbe5e5;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-card: var(--paper-card);
+  --color-paper-dim: var(--paper-dim);
+  --color-border: var(--border);
+  --color-ink: var(--ink);
+  --color-ink-dim: var(--ink-dim);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
