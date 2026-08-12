@@ -1,22 +1,40 @@
-import { Resend } from "resend";
 import { Locale, t } from "./i18n";
 
 const FROM = process.env.EMAIL_FROM || "Konferencija <prijave@example.com>";
 
-function getClient(): Resend | null {
-  const key = process.env.RESEND_API_KEY;
-  if (!key) return null;
-  return new Resend(key);
+function parseFrom(from: string): { name: string; email: string } {
+  const match = from.match(/^(.*)<(.+)>$/);
+  if (match) return { name: match[1].trim(), email: match[2].trim() };
+  return { name: "", email: from.trim() };
 }
 
 async function send(to: string, subject: string, html: string) {
-  const client = getClient();
-  if (!client) {
-    // Dev fallback: no Resend key configured, log instead of sending.
-    console.log(`\n--- EMAIL (not sent, no RESEND_API_KEY) ---\nTo: ${to}\nSubject: ${subject}\n${html}\n---\n`);
+  const key = process.env.BREVO_API_KEY;
+  if (!key) {
+    // Dev fallback: no Brevo key configured, log instead of sending.
+    console.log(`\n--- EMAIL (not sent, no BREVO_API_KEY) ---\nTo: ${to}\nSubject: ${subject}\n${html}\n---\n`);
     return;
   }
-  await client.emails.send({ from: FROM, to, subject, html });
+
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+      "api-key": key,
+    },
+    body: JSON.stringify({
+      sender: parseFrom(FROM),
+      to: [{ email: to }],
+      subject,
+      htmlContent: html,
+    }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Brevo send failed (${res.status}): ${body}`);
+  }
 }
 
 function wrap(bodyHtml: string): string {

@@ -36,7 +36,7 @@ npx prisma migrate dev
 npm run dev
 ```
 
-Otvori http://localhost:3000. Bez `RESEND_API_KEY` u `.env`, e-mailovi se ne
+Otvori http://localhost:3000. Bez `BREVO_API_KEY` u `.env`, e-mailovi se ne
 šalju nego samo ispisuju u terminal (dovoljno za testiranje).
 
 Prvi organizatorski korak: otvori `/admin`, prijavi se s `ADMIN_PASSWORD` iz
@@ -53,8 +53,8 @@ Prvi organizatorski korak: otvori `/admin`, prijavi se s `ADMIN_PASSWORD` iz
 | `CONTACT_EMAIL` | Prikazuje se ljudima čiji email nije na odobrenom popisu |
 | `SESSION_SECRET` | Slučajan string za potpisivanje kolačića sesije — generiraj s `openssl rand -hex 32` |
 | `ADMIN_PASSWORD` | Lozinka za `/admin` |
-| `RESEND_API_KEY` | API ključ za [Resend](https://resend.com) (slanje e-mailova); prazno = ispis u konzolu |
-| `EMAIL_FROM` | Pošiljatelj e-mailova, npr. `Konferencija <prijave@tvojadomena.hr>` |
+| `BREVO_API_KEY` | API ključ za [Brevo](https://brevo.com) (slanje e-mailova); prazno = ispis u konzolu |
+| `EMAIL_FROM` | Pošiljatelj e-mailova — mora odgovarati emailu koji je verificiran kao "sender" u Brevo računu, npr. `Konferencija <prijave@tvojadomena.hr>` |
 | `WAITLIST_HOLD_MINUTES` | Koliko dugo vrijedi ponuda oslobođenog mjesta (zadano 15) |
 
 ## Deploy (bez plaćanja postojećeg WordPress hostinga)
