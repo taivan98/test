@@ -16,11 +16,8 @@ export async function POST(req: NextRequest) {
     backTo.searchParams.set("msg", "registered");
   } catch (err) {
     if (err instanceof FullError) backTo.searchParams.set("msg", "full");
-    else if (err instanceof BlockConflictError) {
-      backTo.searchParams.set("msg", "conflict");
-      backTo.searchParams.set("conflictHr", err.conflictTitleHr);
-      backTo.searchParams.set("conflictEn", err.conflictTitleEn);
-    } else if (err instanceof NotFoundError) {
+    else if (err instanceof BlockConflictError) backTo.searchParams.set("msg", "conflict");
+    else if (err instanceof NotFoundError) {
       return NextResponse.redirect(new URL("/program", origin));
     } else {
       throw err;

@@ -43,7 +43,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "program.subtitle":
       "Odaberi radionicu po bloku. U jednom bloku možeš biti prijavljen/a samo na jednu opciju.",
     "program.noDays": "Program još nije objavljen.",
-    "program.yourPick": "Tvoj odabir u ovom bloku",
+    "program.yourPick": "✓ Prijavljen/a si na \"{title}\" u ovom bloku",
+    "program.blockTaken": "Blok zauzet",
     "program.mainHall": "Glavna dvorana",
 
     "status.available": "Slobodno",
@@ -133,7 +134,8 @@ export const dictionaries: Record<Locale, Dict> = {
     "program.subtitle":
       "Pick one option per block. You can only hold one registration per time slot.",
     "program.noDays": "The program hasn't been published yet.",
-    "program.yourPick": "Your pick for this block",
+    "program.yourPick": "✓ You're registered for \"{title}\" in this block",
+    "program.blockTaken": "Block taken",
     "program.mainHall": "Main hall",
 
     "status.available": "Open",

@@ -56,16 +56,29 @@ export default async function ProgramPage({
             <h2 className="text-xs font-mono uppercase tracking-wide text-ink-dim mb-2">
               {block.startLabel}–{block.endLabel}
             </h2>
+            {block.myBlockPick && (
+              <div className="mb-2.5 rounded-lg bg-good-soft border border-good/30 px-3 py-2 text-xs font-medium text-good">
+                {t(locale, "program.yourPick", {
+                  title: locale === "hr" ? block.myBlockPick.titleHr : block.myBlockPick.titleEn,
+                })}
+              </div>
+            )}
             <div className="flex flex-col gap-2.5">
               {block.items.map((item) => {
                 const status = capacityStatus(item.confirmedCount, item.capacity);
                 const title = locale === "hr" ? item.titleHr : item.titleEn;
                 const kind = locale === "hr" ? item.kindHr : item.kindEn;
+                const blockedByOther =
+                  item.registrationRequired && !!block.myBlockPick && block.myBlockPick.id !== item.id;
                 return (
                   <Link
                     key={item.id}
                     href={`/sessions/${item.id}`}
-                    className="block bg-paper-card border border-border rounded-xl px-4 py-3 hover:border-accent transition"
+                    className={`block border rounded-xl px-4 py-3 transition ${
+                      blockedByOther
+                        ? "bg-paper-dim border-border opacity-70"
+                        : "bg-paper-card border-border hover:border-accent"
+                    }`}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
@@ -83,7 +96,11 @@ export default async function ProgramPage({
                           </div>
                         )}
                       </div>
-                      {item.registrationRequired ? (
+                      {blockedByOther ? (
+                        <span className="shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-paper-dim text-ink-dim border border-border">
+                          {t(locale, "program.blockTaken")}
+                        </span>
+                      ) : item.registrationRequired ? (
                         <StatusChip status={status} locale={locale} />
                       ) : (
                         <span className="shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-paper-dim text-ink-dim">

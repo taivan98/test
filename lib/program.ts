@@ -28,6 +28,9 @@ export type BlockView = {
   startLabel: string;
   endLabel: string;
   items: ProgramItemView[];
+  // set when the participant already holds a confirmed seat for one item in
+  // this block — the rest of the block's items are unavailable to them
+  myBlockPick: { id: string; titleHr: string; titleEn: string } | null;
 };
 
 export type DayView = {
@@ -126,7 +129,11 @@ export async function getProgram(participantId: string | null): Promise<DayView[
           myOfferExpiresAt,
         });
       }
-      blocks.push({ id: block.id, startLabel: block.startLabel, endLabel: block.endLabel, items });
+      const pickedItem = items.find((i) => i.myStatus === "registered") ?? null;
+      const myBlockPick = pickedItem
+        ? { id: pickedItem.id, titleHr: pickedItem.titleHr, titleEn: pickedItem.titleEn }
+        : null;
+      blocks.push({ id: block.id, startLabel: block.startLabel, endLabel: block.endLabel, items, myBlockPick });
     }
     result.push({ id: day.id, labelHr: day.labelHr, labelEn: day.labelEn, date: day.date, blocks });
   }

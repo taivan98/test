@@ -13,14 +13,14 @@ export default async function SessionPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ msg?: string; conflictHr?: string; conflictEn?: string }>;
+  searchParams: Promise<{ msg?: string }>;
 }) {
   const participant = await getCurrentParticipant();
   if (!participant) redirect("/login");
 
   const locale = await getLocale();
   const { id } = await params;
-  const { msg, conflictHr, conflictEn } = await searchParams;
+  const { msg } = await searchParams;
   const found = await getProgramItem(participant.id, id);
   if (!found) redirect("/program");
 
@@ -30,7 +30,12 @@ export default async function SessionPage({
   const title = locale === "hr" ? item.titleHr : item.titleEn;
   const kind = locale === "hr" ? item.kindHr : item.kindEn;
   const description = locale === "hr" ? item.descriptionHr : item.descriptionEn;
-  const conflictTitle = locale === "hr" ? conflictHr : conflictEn;
+  const blockedByOther = item.registrationRequired && !!block.myBlockPick && block.myBlockPick.id !== item.id;
+  const blockPickTitle = block.myBlockPick
+    ? locale === "hr"
+      ? block.myBlockPick.titleHr
+      : block.myBlockPick.titleEn
+    : "";
 
   return (
     <>
@@ -98,9 +103,9 @@ export default async function SessionPage({
           </div>
         )}
 
-        {msg === "conflict" && conflictTitle && (
+        {blockedByOther && (
           <div className="mb-4 rounded-lg bg-warn-soft border border-warn/30 p-3 text-sm text-ink">
-            {t(locale, "session.blockConflict", { title: conflictTitle })}
+            {t(locale, "session.blockConflict", { title: blockPickTitle })}
           </div>
         )}
         {msg === "full" && item.myStatus === "none" && (
@@ -157,7 +162,7 @@ export default async function SessionPage({
             </>
           )}
 
-          {item.registrationRequired && item.myStatus === "none" && status !== "full" && (
+          {!blockedByOther && item.registrationRequired && item.myStatus === "none" && status !== "full" && (
             <form action="/api/registrations" method="POST">
               <input type="hidden" name="programItemId" value={item.id} />
               <button
@@ -169,7 +174,7 @@ export default async function SessionPage({
             </form>
           )}
 
-          {item.registrationRequired && item.myStatus === "none" && status === "full" && (
+          {!blockedByOther && item.registrationRequired && item.myStatus === "none" && status === "full" && (
             <form action="/api/waitlist/join" method="POST">
               <input type="hidden" name="programItemId" value={item.id} />
               <button
