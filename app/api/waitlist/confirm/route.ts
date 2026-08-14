@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { confirmWaitlistOffer } from "@/lib/registrations";
+import { claimWaitlistOffer } from "@/lib/registrations";
 import { notifyPromotion } from "@/lib/notify";
 import { PARTICIPANT_COOKIE_NAME, packParticipantSession } from "@/lib/session";
 import { isHttpsOrigin } from "@/lib/cookieSecurity";
 
-export async function GET(req: NextRequest) {
-  const url = new URL(req.url);
-  const origin = process.env.APP_URL || url.origin;
-  const token = url.searchParams.get("token") || "";
+export async function POST(req: NextRequest) {
+  const origin = process.env.APP_URL || new URL(req.url).origin;
+  const form = await req.formData();
+  const token = String(form.get("token") || "");
 
-  const result = await confirmWaitlistOffer(token);
+  const result = await claimWaitlistOffer(token);
 
   if (!result.ok && result.reason === "invalid_or_expired") {
     return NextResponse.redirect(new URL("/waitlist/expired", origin));

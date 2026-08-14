@@ -154,13 +154,41 @@ export async function leaveWaitlist(participantId: string, programItemId: string
   return null;
 }
 
+export type OfferCheckResult =
+  | { status: "expired" }
+  | { status: "showable"; titleHr: string; titleEn: string };
+
+/**
+ * Read-only check for the "confirm your seat" landing page — deliberately does
+ * NOT claim the seat. Corporate email scanners (e.g. Outlook Safe Links) visit
+ * links in HTML emails automatically before a human opens them; if merely
+ * *visiting* the link claimed the seat, the scanner would silently burn the
+ * participant's own offer. Claiming only happens on the explicit form POST
+ * from this page (see claimWaitlistOffer).
+ */
+export async function checkWaitlistOffer(rawToken: string): Promise<OfferCheckResult> {
+  const { hashToken } = await import("./tokens");
+  const entry = await prisma.waitlistEntry.findUnique({
+    where: { offerTokenHash: hashToken(rawToken) },
+    include: { programItem: true },
+  });
+  if (!entry) return { status: "expired" };
+  if (entry.status === "CONFIRMED") {
+    return { status: "showable", titleHr: entry.programItem.titleHr, titleEn: entry.programItem.titleEn };
+  }
+  const stillValid =
+    entry.status === "OFFERED" && !!entry.offerExpiresAt && entry.offerExpiresAt.getTime() > Date.now();
+  if (!stillValid) return { status: "expired" };
+  return { status: "showable", titleHr: entry.programItem.titleHr, titleEn: entry.programItem.titleEn };
+}
+
 export type ConfirmResult =
   | { ok: true; participantId: string; participantEmail: string; programItemId: string }
   | { ok: false; reason: "invalid_or_expired" }
   | { ok: false; reason: "conflict"; conflictTitleHr: string; conflictTitleEn: string; promoted: PromotedOffer | null };
 
-/** Called when someone clicks the "confirm your seat" link from the waitlist email. */
-export async function confirmWaitlistOffer(rawToken: string): Promise<ConfirmResult> {
+/** Called when someone submits the "confirm your seat" button on the waitlist landing page. */
+export async function claimWaitlistOffer(rawToken: string): Promise<ConfirmResult> {
   const { hashToken } = await import("./tokens");
   const entry = await prisma.waitlistEntry.findUnique({
     where: { offerTokenHash: hashToken(rawToken) },
