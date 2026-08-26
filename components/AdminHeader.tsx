@@ -1,11 +1,17 @@
 import Link from "next/link";
+import { getSiteSettings } from "@/lib/settings";
 
-export function AdminHeader({ conferenceName }: { conferenceName: string }) {
+export async function AdminHeader({ conferenceName }: { conferenceName: string }) {
+  const { logoUrl } = await getSiteSettings();
   return (
     <header className="border-b border-border bg-paper-card">
       <div className="mx-auto max-w-4xl px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-4">
-          <Link href="/admin" className="font-semibold text-[15px]">
+          <Link href="/admin" className="flex items-center gap-2 font-semibold text-[15px]">
+            {logoUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={logoUrl} alt="" className="h-7 w-auto rounded-sm object-contain" />
+            )}
             {conferenceName} <span className="text-ink-dim font-normal">· organizator</span>
           </Link>
         </div>
@@ -22,6 +28,9 @@ export function AdminHeader({ conferenceName }: { conferenceName: string }) {
           <a href="/api/admin/export" className="hover:text-ink">
             Izvoz (CSV)
           </a>
+          <Link href="/admin/branding" className="hover:text-ink">
+            Brending
+          </Link>
           <Link href="/admin/reset-test-data" className="hover:text-ink">
             Očisti testne podatke
           </Link>

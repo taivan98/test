@@ -137,3 +137,14 @@ model AdminToken {
   expiresAt DateTime
   createdAt DateTime @default(now())
 }
+
+// Single-row table (id is always "singleton") holding organizer-editable
+// branding: logo, accent color, and a free-text CSS escape hatch.
+model SiteSettings {
+  id          String   @id @default("singleton")
+  logoUrl     String   @default("")
+  accentColor String   @default("")
+  accentInk   String   @default("")
+  customCss   String   @default("")
+  updatedAt   DateTime @updatedAt
+}

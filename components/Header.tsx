@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { Locale, t } from "@/lib/i18n";
 import { LanguageSwitch } from "./LanguageSwitch";
+import { getSiteSettings } from "@/lib/settings";
 
-export function Header({
+export async function Header({
   locale,
   path,
   participantEmail,
@@ -13,10 +14,15 @@ export function Header({
   participantEmail?: string | null;
   conferenceName: string;
 }) {
+  const { logoUrl } = await getSiteSettings();
   return (
     <header className="border-b border-border bg-paper-card">
       <div className="mx-auto max-w-2xl px-4 py-3 flex items-center justify-between gap-3">
-        <Link href="/program" className="font-semibold text-[15px] truncate">
+        <Link href="/program" className="flex items-center gap-2 font-semibold text-[15px] truncate">
+          {logoUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logoUrl} alt="" className="h-7 w-auto rounded-sm object-contain" />
+          )}
           {conferenceName}
         </Link>
         <div className="flex items-center gap-4">
