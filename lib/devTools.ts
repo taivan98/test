@@ -34,3 +34,23 @@ export function fillToOneSeat(programItemId: string): Promise<number> {
 export function fillCompletely(programItemId: string): Promise<number> {
   return fillSeats(programItemId, 0);
 }
+
+export type ResetTestDataResult = {
+  participants: number;
+  approvedEmails: number;
+};
+
+/**
+ * Wipes everyone who ever logged in or was approved — registrations, waitlist
+ * entries and magic links go with them via cascading deletes — while leaving
+ * the real program (days/blocks/sessions) completely untouched. Use this to
+ * clear out fake/test participants (from manual testing or the fill-seats
+ * buttons above) before real registrations start.
+ */
+export async function resetTestData(): Promise<ResetTestDataResult> {
+  const [participants, approvedEmails] = await prisma.$transaction([
+    prisma.participant.deleteMany({}),
+    prisma.approvedEmail.deleteMany({}),
+  ]);
+  return { participants: participants.count, approvedEmails: approvedEmails.count };
+}

@@ -22,6 +22,9 @@ export function AdminHeader({ conferenceName }: { conferenceName: string }) {
           <a href="/api/admin/export" className="hover:text-ink">
             Izvoz (CSV)
           </a>
+          <Link href="/admin/reset-test-data" className="hover:text-ink">
+            Očisti testne podatke
+          </Link>
           <form action="/api/admin/logout" method="POST">
             <button type="submit" className="hover:text-ink">
               Odjava
