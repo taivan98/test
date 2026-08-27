@@ -44,10 +44,10 @@ export default async function AdminDashboardPage() {
                     {block.startLabel}–{block.endLabel}
                   </div>
                   <div className="border border-border rounded-xl overflow-x-auto">
-                    <table className="w-full text-sm min-w-[560px] table-fixed">
+                    <table className="w-full text-sm min-w-[600px] table-fixed">
                       <colgroup>
                         <col />
-                        <col className="w-[130px]" />
+                        <col className="w-[160px]" />
                         <col className="w-[190px]" />
                         <col className="w-[100px]" />
                       </colgroup>
@@ -63,7 +63,7 @@ export default async function AdminDashboardPage() {
                         {block.programItems.map((item) => (
                           <tr key={item.id} className="border-b border-border last:border-0">
                             <td className="px-3 py-2.5 font-medium align-top">{item.titleHr}</td>
-                            <td className="px-3 py-2.5 text-ink-dim align-top truncate">{item.room || "—"}</td>
+                            <td className="px-3 py-2.5 text-ink-dim align-top">{item.room || "—"}</td>
                             <td className="px-3 py-2.5 align-top">
                               {item.capacity != null ? (
                                 <div className="flex items-center gap-2">
