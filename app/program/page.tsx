@@ -181,7 +181,7 @@ export default async function ProgramPage({
                         <div className="flex-1">
                           <CapacityBar confirmedCount={item.confirmedCount} capacity={item.capacity} />
                         </div>
-                        <span className={`text-[11px] font-mono tabular-nums ${seatColor}`}>
+                        <span className={`text-xs font-mono font-bold tabular-nums ${seatColor}`}>
                           {t(locale, "session.seatsLeft", { taken: item.confirmedCount, capacity: item.capacity })}
                         </span>
                       </div>
