@@ -6,7 +6,7 @@ import { getProgram } from "@/lib/program";
 import { zagrebDateKey } from "@/lib/scheduleTime";
 import { t } from "@/lib/i18n";
 import { capacityStatus, capacityColor } from "@/lib/status";
-import { initials, kindIcon } from "@/lib/display";
+import { kindIcon } from "@/lib/display";
 import { Header } from "@/components/Header";
 import { CapacityBar } from "@/components/CapacityBar";
 
@@ -103,17 +103,10 @@ export default async function ProgramPage({
                         )}
                         <div className="font-semibold text-[15px]">{title}</div>
                         {(item.room || item.speaker) && (
-                          <div className="text-xs text-ink-dim mt-0.5 flex flex-wrap items-center gap-x-1.5">
+                          <div className="text-xs text-ink-dim mt-0.5 flex flex-wrap gap-x-1.5">
                             {item.room && <span>{item.room}</span>}
                             {item.room && item.speaker && <span>·</span>}
-                            {item.speaker && (
-                              <span className="inline-flex items-center gap-1">
-                                <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-accent-soft text-accent text-[9px] font-bold shrink-0">
-                                  {initials(item.speaker)}
-                                </span>
-                                {item.speaker}
-                              </span>
-                            )}
+                            {item.speaker && <span>{item.speaker}</span>}
                           </div>
                         )}
                       </Link>

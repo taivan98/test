@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { AdminHeader } from "@/components/AdminHeader";
+import { parseSpeakers, MAX_SPEAKER_FIELDS } from "@/lib/speakers";
 
 export default async function EditProgramItemPage({ params }: { params: Promise<{ id: string }> }) {
   await requireAdmin();
@@ -9,6 +10,7 @@ export default async function EditProgramItemPage({ params }: { params: Promise<
   const item = await prisma.programItem.findUnique({ where: { id } });
   if (!item) redirect("/admin/program");
   const conferenceName = process.env.CONFERENCE_NAME || "Konferencija";
+  const speakers = parseSpeakers(item.speaker);
 
   return (
     <>
@@ -46,8 +48,18 @@ export default async function EditProgramItemPage({ params }: { params: Promise<
           <label className="text-sm font-medium">Description (EN)</label>
           <textarea name="descriptionEn" defaultValue={item.descriptionEn} rows={3} className="rounded-lg border border-border px-3 py-2 text-sm" />
 
-          <label className="text-sm font-medium">Predavač/ica</label>
-          <input name="speaker" defaultValue={item.speaker} className="rounded-lg border border-border px-3 py-2 text-sm" />
+          <label className="text-sm font-medium">Predavači/ce</label>
+          <div className="grid grid-cols-2 gap-2.5">
+            {Array.from({ length: MAX_SPEAKER_FIELDS }, (_, i) => (
+              <input
+                key={i}
+                name={`speaker${i + 1}`}
+                defaultValue={speakers[i] || ""}
+                placeholder={`Predavač/ica ${i + 1}${i === 0 ? "" : " (po želji)"}`}
+                className="rounded-lg border border-border px-3 py-2 text-sm"
+              />
+            ))}
+          </div>
 
           <label className="text-sm font-medium">Dvorana</label>
           <input name="room" defaultValue={item.room} className="rounded-lg border border-border px-3 py-2 text-sm" />

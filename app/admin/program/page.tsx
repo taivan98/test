@@ -171,7 +171,12 @@ export default async function AdminProgramPage() {
                       <input name="titleEn" placeholder="Title (EN)" required className="rounded-lg border border-border px-3 py-2 text-sm" />
                       <textarea name="descriptionHr" placeholder="Opis (HR)" className="rounded-lg border border-border px-3 py-2 text-sm sm:col-span-2" rows={2} />
                       <textarea name="descriptionEn" placeholder="Description (EN)" className="rounded-lg border border-border px-3 py-2 text-sm sm:col-span-2" rows={2} />
-                      <input name="speaker" placeholder="Predavač/ica" className="rounded-lg border border-border px-3 py-2 text-sm" />
+                      <div className="sm:col-span-2 grid grid-cols-2 gap-2.5">
+                        <input name="speaker1" placeholder="Predavač/ica 1" className="rounded-lg border border-border px-3 py-2 text-sm" />
+                        <input name="speaker2" placeholder="Predavač/ica 2 (po želji)" className="rounded-lg border border-border px-3 py-2 text-sm" />
+                        <input name="speaker3" placeholder="Predavač/ica 3 (po želji)" className="rounded-lg border border-border px-3 py-2 text-sm" />
+                        <input name="speaker4" placeholder="Predavač/ica 4 (po želji)" className="rounded-lg border border-border px-3 py-2 text-sm" />
+                      </div>
                       <input name="room" placeholder="Dvorana" className="rounded-lg border border-border px-3 py-2 text-sm" />
                       <input name="capacity" type="number" min={0} placeholder="Kapacitet (prazno = bez limita)" className="rounded-lg border border-border px-3 py-2 text-sm" />
                       <input name="detailsUrl" type="url" placeholder="Poveznica na opis/biografiju (na webu)" className="rounded-lg border border-border px-3 py-2 text-sm" />

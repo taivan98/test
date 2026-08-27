@@ -1,12 +1,3 @@
-/** Up to 2 uppercase initials from a person's name, e.g. "Ana Petrušić" -> "AP". */
-export function initials(name: string): string {
-  const firstPerson = name.split(",")[0].trim();
-  const parts = firstPerson.split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "";
-  const letters = parts.length === 1 ? parts[0].slice(0, 2) : parts[0][0] + parts[1][0];
-  return letters.toUpperCase();
-}
-
 const KIND_ICONS: { match: RegExp; icon: string }[] = [
   { match: /radionic|workshop/i, icon: "🛠️" },
   { match: /panel/i, icon: "🗣️" },

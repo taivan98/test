@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireAdminApi } from "@/lib/adminGuard";
+import { joinSpeakers } from "@/lib/speakers";
 
 export async function POST(req: NextRequest) {
   const origin = process.env.APP_URL || new URL(req.url).origin;
@@ -16,7 +17,12 @@ export async function POST(req: NextRequest) {
   const titleEn = String(form.get("titleEn") || "");
   const descriptionHr = String(form.get("descriptionHr") || "");
   const descriptionEn = String(form.get("descriptionEn") || "");
-  const speaker = String(form.get("speaker") || "");
+  const speaker = joinSpeakers([
+    form.get("speaker1") as string,
+    form.get("speaker2") as string,
+    form.get("speaker3") as string,
+    form.get("speaker4") as string,
+  ]);
   const room = String(form.get("room") || "");
   const detailsUrl = String(form.get("detailsUrl") || "");
   const registrationRequired = form.get("registrationRequired") != null;
