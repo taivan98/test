@@ -9,14 +9,17 @@ export async function POST(req: NextRequest) {
 
   const form = await req.formData();
   const programItemId = String(form.get("programItemId") || "");
-  const backTo = new URL(`/sessions/${programItemId}`, origin);
+  const redirectTo = String(form.get("redirectTo") || `/sessions/${programItemId}`);
+  const backTo = new URL(redirectTo, origin);
 
   try {
     await registerForItem(participant.id, programItemId);
     backTo.searchParams.set("msg", "registered");
   } catch (err) {
-    if (err instanceof FullError) backTo.searchParams.set("msg", "full");
-    else if (err instanceof BlockConflictError) backTo.searchParams.set("msg", "conflict");
+    if (err instanceof FullError) {
+      backTo.searchParams.set("msg", "full");
+      backTo.searchParams.set("item", programItemId);
+    } else if (err instanceof BlockConflictError) backTo.searchParams.set("msg", "conflict");
     else if (err instanceof NotFoundError) {
       return NextResponse.redirect(new URL("/program", origin));
     } else {

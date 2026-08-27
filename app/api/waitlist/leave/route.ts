@@ -10,11 +10,12 @@ export async function POST(req: NextRequest) {
 
   const form = await req.formData();
   const programItemId = String(form.get("programItemId") || "");
+  const redirectTo = String(form.get("redirectTo") || `/sessions/${programItemId}`);
 
   const promoted = await leaveWaitlist(participant.id, programItemId);
   if (promoted) await notifyPromotion(promoted, origin);
 
-  const backTo = new URL(`/sessions/${programItemId}`, origin);
+  const backTo = new URL(redirectTo, origin);
   backTo.searchParams.set("msg", "left_waitlist");
   return NextResponse.redirect(backTo);
 }

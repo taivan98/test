@@ -9,7 +9,8 @@ export async function POST(req: NextRequest) {
 
   const form = await req.formData();
   const programItemId = String(form.get("programItemId") || "");
-  const backTo = new URL(`/sessions/${programItemId}`, origin);
+  const redirectTo = String(form.get("redirectTo") || `/sessions/${programItemId}`);
+  const backTo = new URL(redirectTo, origin);
 
   try {
     await joinWaitlist(participant.id, programItemId);
