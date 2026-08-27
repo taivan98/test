@@ -6,6 +6,7 @@ import { getProgram } from "@/lib/program";
 import { zagrebDateKey } from "@/lib/scheduleTime";
 import { t } from "@/lib/i18n";
 import { capacityStatus, capacityColor } from "@/lib/status";
+import { initials, kindIcon } from "@/lib/display";
 import { Header } from "@/components/Header";
 import { CapacityBar } from "@/components/CapacityBar";
 
@@ -37,6 +38,12 @@ export default async function ProgramPage({
       <main className="flex-1 mx-auto w-full max-w-2xl px-4 py-6">
         <h1 className="text-2xl font-semibold mb-1">{t(locale, "program.title")}</h1>
         <p className="text-sm text-ink-dim mb-5">{t(locale, "program.subtitle")}</p>
+
+        {todayDay && activeDay?.id === todayDay.id && (
+          <div className="mb-5 rounded-lg bg-accent-soft border border-accent/30 px-3 py-2 text-sm font-medium text-accent">
+            {t(locale, "program.todayBanner", { day: locale === "hr" ? todayDay.labelHr : todayDay.labelEn })}
+          </div>
+        )}
 
         {days.length === 0 && <p className="text-ink-dim">{t(locale, "program.noDays")}</p>}
 
@@ -82,7 +89,7 @@ export default async function ProgramPage({
                 return (
                   <div
                     key={item.id}
-                    className={`border rounded-xl px-4 py-3 ${
+                    className={`border rounded-xl px-4 py-3 transition-shadow sm:hover:shadow-md ${
                       blockedByOther ? "bg-paper-dim border-border opacity-70" : "bg-paper-card border-border"
                     }`}
                   >
@@ -90,15 +97,23 @@ export default async function ProgramPage({
                       <Link href={`/sessions/${item.id}`} className="block min-w-0">
                         {kind && (
                           <div className="text-[10.5px] font-mono uppercase tracking-wide text-accent mb-0.5">
+                            {kindIcon(kind) && <span className="mr-1">{kindIcon(kind)}</span>}
                             {kind}
                           </div>
                         )}
                         <div className="font-semibold text-[15px]">{title}</div>
                         {(item.room || item.speaker) && (
-                          <div className="text-xs text-ink-dim mt-0.5 flex flex-wrap gap-x-1.5">
+                          <div className="text-xs text-ink-dim mt-0.5 flex flex-wrap items-center gap-x-1.5">
                             {item.room && <span>{item.room}</span>}
                             {item.room && item.speaker && <span>·</span>}
-                            {item.speaker && <span>{item.speaker}</span>}
+                            {item.speaker && (
+                              <span className="inline-flex items-center gap-1">
+                                <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-accent-soft text-accent text-[9px] font-bold shrink-0">
+                                  {initials(item.speaker)}
+                                </span>
+                                {item.speaker}
+                              </span>
+                            )}
                           </div>
                         )}
                       </Link>

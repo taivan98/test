@@ -5,6 +5,7 @@ import { getLocale } from "@/lib/locale";
 import { getProgram, DayView, BlockView, ProgramItemView } from "@/lib/program";
 import { t } from "@/lib/i18n";
 import { Header } from "@/components/Header";
+import { ConfirmSubmitForm } from "@/components/ConfirmSubmitForm";
 import { googleCalendarLink } from "@/lib/ics";
 import { toCalendarEvent } from "@/lib/calendarEvents";
 
@@ -57,7 +58,8 @@ export default async function SchedulePage({
         )}
 
         {dayGroups.length === 0 && (
-          <div className="text-center py-10">
+          <div className="text-center py-14">
+            <div className="text-4xl mb-3">🗓️</div>
             <p className="text-ink-dim mb-4">{t(locale, "schedule.empty")}</p>
             <Link
               href="/program"
@@ -150,7 +152,7 @@ function ScheduleRow({
         </Link>
 
         {item.myStatus === "registered" ? (
-          <div className="ml-4 mt-2 flex items-center gap-4">
+          <div className="ml-4 mt-2 flex items-center gap-4 flex-wrap">
             <a
               href={`/api/calendar/session/${item.id}`}
               className="text-xs font-medium text-accent hover:underline"
@@ -165,9 +167,26 @@ function ScheduleRow({
             >
               {t(locale, "schedule.addGoogle")}
             </a>
+            <ConfirmSubmitForm
+              action="/api/registrations/cancel"
+              confirmMessage={t(locale, "schedule.cancelConfirm")}
+              hiddenFields={{ programItemId: item.id, redirectTo: "/schedule" }}
+              buttonClassName="text-xs font-medium text-ink-dim hover:text-bad"
+            >
+              {t(locale, "session.cancel")}
+            </ConfirmSubmitForm>
           </div>
         ) : (
-          <div className="ml-4 mt-2 text-xs text-ink-dim">{t(locale, "schedule.waitlistCalendarNote")}</div>
+          <div className="ml-4 mt-2 flex items-center gap-4 flex-wrap">
+            <span className="text-xs text-ink-dim">{t(locale, "schedule.waitlistCalendarNote")}</span>
+            <form action="/api/waitlist/leave" method="POST">
+              <input type="hidden" name="programItemId" value={item.id} />
+              <input type="hidden" name="redirectTo" value="/schedule" />
+              <button type="submit" className="text-xs font-medium text-ink-dim hover:text-bad">
+                {t(locale, "session.leaveWaitlist")}
+              </button>
+            </form>
+          </div>
         )}
       </div>
     </div>

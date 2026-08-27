@@ -46,6 +46,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "program.yourPick": "✓ Prijavljen/a si na \"{title}\" u ovom bloku",
     "program.blockTaken": "Blok zauzet",
     "program.mainHall": "Glavna dvorana",
+    "program.todayBanner": "📍 Danas je {day}",
 
     "status.available": "Slobodno",
     "status.almostFull": "Skoro puno",
@@ -78,6 +79,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "schedule.addIcs": "Dodaj u kalendar",
     "schedule.addGoogle": "Google Calendar",
     "schedule.waitlistCalendarNote": "Dodavanje u kalendar bit će dostupno čim potvrdiš mjesto.",
+    "schedule.cancelConfirm": "Odjaviti se s ove radionice? Mjesto odmah ide sljedećoj osobi na listi čekanja.",
 
     "waitlist.emailSubject": "Oslobodilo se mjesto: {title}",
     "waitlist.emailBody":
@@ -137,6 +139,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "program.yourPick": "✓ You're registered for \"{title}\" in this block",
     "program.blockTaken": "Block taken",
     "program.mainHall": "Main hall",
+    "program.todayBanner": "📍 Today is {day}",
 
     "status.available": "Open",
     "status.almostFull": "Almost full",
@@ -169,6 +172,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "schedule.addIcs": "Add to calendar",
     "schedule.addGoogle": "Google Calendar",
     "schedule.waitlistCalendarNote": "Adding to your calendar will be available once your seat is confirmed.",
+    "schedule.cancelConfirm": "Cancel your spot in this session? It goes straight to the next person on the waitlist.",
 
     "waitlist.emailSubject": "A seat opened up: {title}",
     "waitlist.emailBody":
