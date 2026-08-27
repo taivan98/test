@@ -36,3 +36,15 @@ export function zagrebLocalToUtc(dayDate: Date, timeLabel: string): Date {
   const offsetHours = isEuSummerTime(guess) ? 2 : 1;
   return new Date(Date.UTC(y, mo, d, h - offsetHours, m));
 }
+
+const zagrebDateFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Europe/Zagreb",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+/** "YYYY-MM-DD" for the given instant as a calendar date in Europe/Zagreb — used to match "today" to a conference Day. */
+export function zagrebDateKey(d: Date): string {
+  return zagrebDateFormatter.format(d);
+}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getCurrentParticipant } from "@/lib/auth";
 import { getLocale } from "@/lib/locale";
 import { getProgram } from "@/lib/program";
+import { zagrebDateKey } from "@/lib/scheduleTime";
 import { t } from "@/lib/i18n";
 import { capacityStatus } from "@/lib/status";
 import { Header } from "@/components/Header";
@@ -22,7 +23,9 @@ export default async function ProgramPage({
   const days = await getProgram(participant.id);
   const conferenceName = process.env.CONFERENCE_NAME || "Konferencija";
 
-  const activeDay = days.find((d) => d.id === dayParam) ?? days[0];
+  const todayKey = zagrebDateKey(new Date());
+  const todayDay = days.find((d) => zagrebDateKey(d.date) === todayKey);
+  const activeDay = days.find((d) => d.id === dayParam) ?? todayDay ?? days[0];
 
   return (
     <>
