@@ -8,7 +8,7 @@ import { toCalendarEvent } from "@/lib/calendarEvents";
 export async function GET(req: NextRequest) {
   const origin = process.env.APP_URL || new URL(req.url).origin;
   const participant = await getCurrentParticipant();
-  if (!participant) return NextResponse.redirect(new URL("/login", origin));
+  if (!participant) return NextResponse.redirect(new URL("/login", origin), 303);
 
   const locale = await getLocale();
   const conferenceName = process.env.CONFERENCE_NAME || "Konferencija";

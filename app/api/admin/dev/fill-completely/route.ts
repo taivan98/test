@@ -11,5 +11,5 @@ export async function POST(req: NextRequest) {
   const programItemId = String(form.get("programItemId") || "");
   await fillCompletely(programItemId);
 
-  return NextResponse.redirect(new URL("/admin/program", origin));
+  return NextResponse.redirect(new URL("/admin/program", origin), 303);
 }

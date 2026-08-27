@@ -5,7 +5,7 @@ import { registerForItem, BlockConflictError, FullError, NotFoundError } from "@
 export async function POST(req: NextRequest) {
   const origin = process.env.APP_URL || new URL(req.url).origin;
   const participant = await getCurrentParticipant();
-  if (!participant) return NextResponse.redirect(new URL("/login", origin));
+  if (!participant) return NextResponse.redirect(new URL("/login", origin), 303);
 
   const form = await req.formData();
   const programItemId = String(form.get("programItemId") || "");
@@ -21,11 +21,11 @@ export async function POST(req: NextRequest) {
       backTo.searchParams.set("item", programItemId);
     } else if (err instanceof BlockConflictError) backTo.searchParams.set("msg", "conflict");
     else if (err instanceof NotFoundError) {
-      return NextResponse.redirect(new URL("/program", origin));
+      return NextResponse.redirect(new URL("/program", origin), 303);
     } else {
       throw err;
     }
   }
 
-  return NextResponse.redirect(backTo);
+  return NextResponse.redirect(backTo, 303);
 }

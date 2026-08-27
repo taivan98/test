@@ -15,5 +15,5 @@ export async function POST(req: NextRequest) {
   const order = await prisma.block.count({ where: { dayId } });
   await prisma.block.create({ data: { dayId, startLabel, endLabel, order } });
 
-  return NextResponse.redirect(new URL("/admin/program", origin));
+  return NextResponse.redirect(new URL("/admin/program", origin), 303);
 }

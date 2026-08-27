@@ -12,18 +12,18 @@ export async function POST(req: NextRequest) {
   const result = await claimWaitlistOffer(token);
 
   if (!result.ok && result.reason === "invalid_or_expired") {
-    return NextResponse.redirect(new URL("/waitlist/expired", origin));
+    return NextResponse.redirect(new URL("/waitlist/expired", origin), 303);
   }
 
   if (!result.ok && result.reason === "conflict") {
     if (result.promoted) await notifyPromotion(result.promoted, origin);
     const dest = new URL("/waitlist/expired", origin);
     dest.searchParams.set("reason", "conflict");
-    return NextResponse.redirect(dest);
+    return NextResponse.redirect(dest, 303);
   }
 
   if (result.ok) {
-    const res = NextResponse.redirect(new URL("/schedule?msg=waitlist_confirmed", origin));
+    const res = NextResponse.redirect(new URL("/schedule?msg=waitlist_confirmed", origin), 303);
     const { value, maxAge } = packParticipantSession(result.participantId, result.participantEmail);
     res.cookies.set(PARTICIPANT_COOKIE_NAME, value, {
       httpOnly: true,
@@ -35,5 +35,5 @@ export async function POST(req: NextRequest) {
     return res;
   }
 
-  return NextResponse.redirect(new URL("/waitlist/expired", origin));
+  return NextResponse.redirect(new URL("/waitlist/expired", origin), 303);
 }

@@ -29,5 +29,5 @@ export async function POST(req: NextRequest) {
 
   const url = new URL("/admin/approved-emails", origin);
   url.searchParams.set("added", String(emails.length));
-  return NextResponse.redirect(url);
+  return NextResponse.redirect(url, 303);
 }

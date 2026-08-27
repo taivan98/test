@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   if (!email || !email.includes("@")) {
     const url = new URL("/login", origin);
     url.searchParams.set("status", "invalid");
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(url, 303);
   }
 
   const approved = await prisma.approvedEmail.findUnique({ where: { email } });
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     const url = new URL("/login", origin);
     url.searchParams.set("status", "not_approved");
     url.searchParams.set("email", email);
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(url, 303);
   }
 
   const participant = await prisma.participant.upsert({
@@ -50,11 +50,11 @@ export async function POST(req: NextRequest) {
     const url = new URL("/login", origin);
     url.searchParams.set("status", "send_failed");
     url.searchParams.set("email", email);
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(url, 303);
   }
 
   const url = new URL("/login", origin);
   url.searchParams.set("status", "sent");
   url.searchParams.set("email", email);
-  return NextResponse.redirect(url);
+  return NextResponse.redirect(url, 303);
 }

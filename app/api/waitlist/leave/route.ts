@@ -6,7 +6,7 @@ import { notifyPromotion } from "@/lib/notify";
 export async function POST(req: NextRequest) {
   const origin = process.env.APP_URL || new URL(req.url).origin;
   const participant = await getCurrentParticipant();
-  if (!participant) return NextResponse.redirect(new URL("/login", origin));
+  if (!participant) return NextResponse.redirect(new URL("/login", origin), 303);
 
   const form = await req.formData();
   const programItemId = String(form.get("programItemId") || "");
@@ -17,5 +17,5 @@ export async function POST(req: NextRequest) {
 
   const backTo = new URL(redirectTo, origin);
   backTo.searchParams.set("msg", "left_waitlist");
-  return NextResponse.redirect(backTo);
+  return NextResponse.redirect(backTo, 303);
 }

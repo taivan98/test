@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
   const valid = record && !record.usedAt && record.expiresAt.getTime() > Date.now();
 
   if (!valid) {
-    return NextResponse.redirect(new URL("/verify/invalid", origin));
+    return NextResponse.redirect(new URL("/verify/invalid", origin), 303);
   }
 
   await prisma.magicLinkToken.update({
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     data: { usedAt: new Date() },
   });
 
-  const res = NextResponse.redirect(new URL("/program", origin));
+  const res = NextResponse.redirect(new URL("/program", origin), 303);
   const { value, maxAge } = packParticipantSession(record.participant.id, record.participant.email);
   res.cookies.set(PARTICIPANT_COOKIE_NAME, value, {
     httpOnly: true,

@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       fontUrl: "",
       customCss: "",
     });
-    return NextResponse.redirect(new URL("/admin/branding?done=reset", origin));
+    return NextResponse.redirect(new URL("/admin/branding?done=reset", origin), 303);
   }
 
   // This form only edits text/color fields — logo/favicon/OG-image/font are
@@ -61,5 +61,5 @@ export async function POST(req: NextRequest) {
     customCss,
   });
 
-  return NextResponse.redirect(new URL("/admin/branding?done=1", origin));
+  return NextResponse.redirect(new URL("/admin/branding?done=1", origin), 303);
 }

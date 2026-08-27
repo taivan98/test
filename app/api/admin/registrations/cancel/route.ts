@@ -15,5 +15,5 @@ export async function POST(req: NextRequest) {
   const promoted = await cancelRegistration(participantId, programItemId);
   if (promoted) await notifyPromotion(promoted, origin);
 
-  return NextResponse.redirect(new URL("/admin/program", origin));
+  return NextResponse.redirect(new URL("/admin/program", origin), 303);
 }

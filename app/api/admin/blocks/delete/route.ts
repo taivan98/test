@@ -11,5 +11,5 @@ export async function POST(req: NextRequest) {
   const id = String(form.get("id") || "");
   await prisma.block.delete({ where: { id } });
 
-  return NextResponse.redirect(new URL("/admin/program", origin));
+  return NextResponse.redirect(new URL("/admin/program", origin), 303);
 }

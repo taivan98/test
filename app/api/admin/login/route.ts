@@ -17,10 +17,10 @@ export async function POST(req: NextRequest) {
   if (!ok) {
     const url = new URL("/admin/login", origin);
     url.searchParams.set("status", "invalid");
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(url, 303);
   }
 
-  const res = NextResponse.redirect(new URL("/admin", origin));
+  const res = NextResponse.redirect(new URL("/admin", origin), 303);
   const { value, maxAge } = packAdminSession();
   res.cookies.set(ADMIN_COOKIE_NAME, value, {
     httpOnly: true,

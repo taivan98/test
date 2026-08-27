@@ -28,5 +28,5 @@ export async function POST(req: NextRequest) {
     data: { blockId, type, kindHr, kindEn, titleHr, titleEn, descriptionHr, descriptionEn, speaker, room, detailsUrl, registrationRequired, capacity, order },
   });
 
-  return NextResponse.redirect(new URL("/admin/program", origin));
+  return NextResponse.redirect(new URL("/admin/program", origin), 303);
 }

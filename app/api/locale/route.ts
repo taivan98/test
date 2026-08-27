@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   const next = url.searchParams.get("next") || "/";
   const safeNext = next.startsWith("/") ? next : "/";
 
-  const res = NextResponse.redirect(new URL(safeNext, origin));
+  const res = NextResponse.redirect(new URL(safeNext, origin), 303);
   if (lang && (LOCALES as string[]).includes(lang)) {
     res.cookies.set(LOCALE_COOKIE, lang, {
       maxAge: 60 * 60 * 24 * 365,

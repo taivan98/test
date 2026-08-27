@@ -17,5 +17,5 @@ export async function POST(req: NextRequest) {
     data: { date: new Date(date || Date.now()), labelHr, labelEn, order },
   });
 
-  return NextResponse.redirect(new URL("/admin/program", origin));
+  return NextResponse.redirect(new URL("/admin/program", origin), 303);
 }

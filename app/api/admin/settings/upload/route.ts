@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   const form = await req.formData();
   const field = String(form.get("field") || "");
   if (!IMAGE_FIELDS.has(field) && !FONT_FIELDS.has(field)) {
-    return NextResponse.redirect(new URL("/admin/branding?error=field", origin));
+    return NextResponse.redirect(new URL("/admin/branding?error=field", origin), 303);
   }
 
   const current = await getSiteSettings();
@@ -23,12 +23,12 @@ export async function POST(req: NextRequest) {
   if (form.get("clear")) {
     await deleteUploadByServingPath(current[key]);
     await updateSiteSettings({ ...current, [key]: "" });
-    return NextResponse.redirect(new URL("/admin/branding?done=1", origin));
+    return NextResponse.redirect(new URL("/admin/branding?done=1", origin), 303);
   }
 
   const file = form.get("file");
   if (!(file instanceof File) || file.size === 0) {
-    return NextResponse.redirect(new URL("/admin/branding?error=nofile", origin));
+    return NextResponse.redirect(new URL("/admin/branding?error=nofile", origin), 303);
   }
 
   try {
@@ -37,10 +37,10 @@ export async function POST(req: NextRequest) {
     await updateSiteSettings({ ...current, [key]: servingPath });
   } catch (err) {
     if (err instanceof UploadValidationError) {
-      return NextResponse.redirect(new URL("/admin/branding?error=invalid", origin));
+      return NextResponse.redirect(new URL("/admin/branding?error=invalid", origin), 303);
     }
     throw err;
   }
 
-  return NextResponse.redirect(new URL("/admin/branding?done=1", origin));
+  return NextResponse.redirect(new URL("/admin/branding?done=1", origin), 303);
 }

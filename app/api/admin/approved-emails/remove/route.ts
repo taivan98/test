@@ -11,5 +11,5 @@ export async function POST(req: NextRequest) {
   const id = String(form.get("id") || "");
   await prisma.approvedEmail.delete({ where: { id } });
 
-  return NextResponse.redirect(new URL("/admin/approved-emails", origin));
+  return NextResponse.redirect(new URL("/admin/approved-emails", origin), 303);
 }

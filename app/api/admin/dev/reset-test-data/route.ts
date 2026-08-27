@@ -9,5 +9,5 @@ export async function POST(req: NextRequest) {
 
   await resetTestData();
 
-  return NextResponse.redirect(new URL("/admin/reset-test-data?done=1", origin));
+  return NextResponse.redirect(new URL("/admin/reset-test-data?done=1", origin), 303);
 }
