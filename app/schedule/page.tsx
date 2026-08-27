@@ -145,7 +145,8 @@ function ScheduleRow({
               </span>
             )}
           </div>
-          {item.room && <div className="text-xs text-ink-dim mt-0.5">{item.room}</div>}
+          {item.room && <div className="text-xs font-medium text-ink mt-0.5">{item.room}</div>}
+          {item.speaker && <div className="text-[11px] text-ink-dim mt-0.5">{item.speaker}</div>}
         </div>
 
         {item.myStatus === "registered" ? (

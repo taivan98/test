@@ -102,13 +102,8 @@ export default async function ProgramPage({
                           </div>
                         )}
                         <div className="font-semibold text-[15px]">{title}</div>
-                        {(item.room || item.speaker) && (
-                          <div className="text-xs text-ink-dim mt-0.5 flex flex-wrap gap-x-1.5">
-                            {item.room && <span>{item.room}</span>}
-                            {item.room && item.speaker && <span>·</span>}
-                            {item.speaker && <span>{item.speaker}</span>}
-                          </div>
-                        )}
+                        {item.room && <div className="text-xs font-medium text-ink mt-0.5">{item.room}</div>}
+                        {item.speaker && <div className="text-[11px] text-ink-dim mt-0.5">{item.speaker}</div>}
                       </div>
 
                       {blockedByOther ? (
