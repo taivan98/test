@@ -44,7 +44,13 @@ export default async function AdminDashboardPage() {
                     {block.startLabel}–{block.endLabel}
                   </div>
                   <div className="border border-border rounded-xl overflow-x-auto">
-                    <table className="w-full text-sm min-w-[520px]">
+                    <table className="w-full text-sm min-w-[560px] table-fixed">
+                      <colgroup>
+                        <col />
+                        <col className="w-[130px]" />
+                        <col className="w-[190px]" />
+                        <col className="w-[100px]" />
+                      </colgroup>
                       <thead>
                         <tr className="text-left text-[11px] font-mono uppercase tracking-wide text-ink-dim border-b border-border">
                           <th className="px-3 py-2">Sesija</th>
@@ -57,11 +63,11 @@ export default async function AdminDashboardPage() {
                         {block.programItems.map((item) => (
                           <tr key={item.id} className="border-b border-border last:border-0">
                             <td className="px-3 py-2.5 font-medium align-top">{item.titleHr}</td>
-                            <td className="px-3 py-2.5 text-ink-dim align-top whitespace-nowrap">{item.room || "—"}</td>
+                            <td className="px-3 py-2.5 text-ink-dim align-top truncate">{item.room || "—"}</td>
                             <td className="px-3 py-2.5 align-top">
                               {item.capacity != null ? (
-                                <div className="flex items-center gap-2 min-w-[140px]">
-                                  <span className="font-mono tabular-nums text-xs">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-mono tabular-nums text-xs shrink-0">
                                     {item._count.registrations}/{item.capacity}
                                   </span>
                                   <div className="flex-1">
