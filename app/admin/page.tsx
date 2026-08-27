@@ -56,9 +56,9 @@ export default async function AdminDashboardPage() {
                       <tbody>
                         {block.programItems.map((item) => (
                           <tr key={item.id} className="border-b border-border last:border-0">
-                            <td className="px-3 py-2.5 font-medium">{item.titleHr}</td>
-                            <td className="px-3 py-2.5 text-ink-dim">{item.room || "—"}</td>
-                            <td className="px-3 py-2.5">
+                            <td className="px-3 py-2.5 font-medium align-top">{item.titleHr}</td>
+                            <td className="px-3 py-2.5 text-ink-dim align-top whitespace-nowrap">{item.room || "—"}</td>
+                            <td className="px-3 py-2.5 align-top">
                               {item.capacity != null ? (
                                 <div className="flex items-center gap-2 min-w-[140px]">
                                   <span className="font-mono tabular-nums text-xs">
@@ -74,7 +74,7 @@ export default async function AdminDashboardPage() {
                                 </span>
                               )}
                             </td>
-                            <td className="px-3 py-2.5 font-mono tabular-nums text-xs">
+                            <td className="px-3 py-2.5 font-mono tabular-nums text-xs align-top">
                               {item.capacity != null ? item._count.waitlistEntries : "—"}
                             </td>
                           </tr>
