@@ -124,10 +124,7 @@ function ScheduleRow({
         {!isLast && <div className="absolute left-0 top-3 bottom-0 w-px bg-border" />}
         <div className="absolute left-[-4.5px] top-3.5 w-2.5 h-2.5 rounded-full bg-accent" />
 
-        <Link
-          href={`/sessions/${item.id}`}
-          className="block ml-4 bg-paper-card border border-border rounded-xl px-4 py-3 hover:border-accent transition"
-        >
+        <div className="ml-4 bg-paper-card border border-border rounded-xl px-4 py-3">
           <div className="flex items-start justify-between gap-3">
             <div>
               {kind && (
@@ -149,43 +146,46 @@ function ScheduleRow({
             )}
           </div>
           {item.room && <div className="text-xs text-ink-dim mt-0.5">{item.room}</div>}
-        </Link>
+        </div>
 
         {item.myStatus === "registered" ? (
-          <div className="ml-4 mt-2 flex items-center gap-4 flex-wrap">
-            <a
-              href={`/api/calendar/session/${item.id}`}
-              className="text-xs font-medium text-accent hover:underline"
-            >
-              {t(locale, "schedule.addIcs")}
-            </a>
-            <a
-              href={googleCalendarLink(event)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-medium text-accent hover:underline"
-            >
-              {t(locale, "schedule.addGoogle")}
-            </a>
+          <div className="ml-4 mt-2 flex items-center justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-4 flex-wrap">
+              <a
+                href={`/api/calendar/session/${item.id}`}
+                className="text-xs font-medium text-accent hover:underline"
+              >
+                {t(locale, "schedule.addIcs")}
+              </a>
+              <a
+                href={googleCalendarLink(event)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-medium text-accent hover:underline"
+              >
+                {t(locale, "schedule.addGoogle")}
+              </a>
+            </div>
             <ConfirmSubmitForm
               action="/api/registrations/cancel"
               confirmMessage={t(locale, "schedule.cancelConfirm")}
               hiddenFields={{ programItemId: item.id, redirectTo: "/schedule" }}
-              buttonClassName="text-xs font-medium text-ink-dim hover:text-bad"
+              buttonClassName="text-xs font-medium text-ink-dim hover:text-bad ml-auto"
             >
               {t(locale, "session.cancel")}
             </ConfirmSubmitForm>
           </div>
         ) : (
-          <div className="ml-4 mt-2 flex items-center gap-4 flex-wrap">
+          <div className="ml-4 mt-2 flex items-center justify-between gap-3 flex-wrap">
             <span className="text-xs text-ink-dim">{t(locale, "schedule.waitlistCalendarNote")}</span>
-            <form action="/api/waitlist/leave" method="POST">
-              <input type="hidden" name="programItemId" value={item.id} />
-              <input type="hidden" name="redirectTo" value="/schedule" />
-              <button type="submit" className="text-xs font-medium text-ink-dim hover:text-bad">
-                {t(locale, "session.leaveWaitlist")}
-              </button>
-            </form>
+            <ConfirmSubmitForm
+              action="/api/waitlist/leave"
+              confirmMessage={t(locale, "schedule.leaveWaitlistConfirm")}
+              hiddenFields={{ programItemId: item.id, redirectTo: "/schedule" }}
+              buttonClassName="text-xs font-medium text-ink-dim hover:text-bad ml-auto"
+            >
+              {t(locale, "session.leaveWaitlist")}
+            </ConfirmSubmitForm>
           </div>
         )}
       </div>

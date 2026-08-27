@@ -80,6 +80,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "schedule.addGoogle": "Google Calendar",
     "schedule.waitlistCalendarNote": "Dodavanje u kalendar bit će dostupno čim potvrdiš mjesto.",
     "schedule.cancelConfirm": "Odjaviti se s ove radionice? Mjesto odmah ide sljedećoj osobi na listi čekanja.",
+    "schedule.leaveWaitlistConfirm": "Napustiti listu čekanja za ovu radionicu?",
 
     "waitlist.emailSubject": "Oslobodilo se mjesto: {title}",
     "waitlist.emailBody":
@@ -173,6 +174,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "schedule.addGoogle": "Google Calendar",
     "schedule.waitlistCalendarNote": "Adding to your calendar will be available once your seat is confirmed.",
     "schedule.cancelConfirm": "Cancel your spot in this session? It goes straight to the next person on the waitlist.",
+    "schedule.leaveWaitlistConfirm": "Leave the waitlist for this session?",
 
     "waitlist.emailSubject": "A seat opened up: {title}",
     "waitlist.emailBody":

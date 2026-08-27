@@ -94,7 +94,7 @@ export default async function ProgramPage({
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3">
-                      <Link href={`/sessions/${item.id}`} className="block min-w-0">
+                      <div className="min-w-0">
                         {kind && (
                           <div className="text-[10.5px] font-mono uppercase tracking-wide text-accent mb-0.5">
                             {kindIcon(kind) && <span className="mr-1">{kindIcon(kind)}</span>}
@@ -109,7 +109,7 @@ export default async function ProgramPage({
                             {item.speaker && <span>{item.speaker}</span>}
                           </div>
                         )}
-                      </Link>
+                      </div>
 
                       {blockedByOther ? (
                         <span className="shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-paper-dim text-ink-dim border border-border">
