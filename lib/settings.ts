@@ -10,6 +10,7 @@ export type SiteSettings = {
   accentColor: string;
   accentInk: string;
   pageBackground: string;
+  fontUrl: string;
   customCss: string;
 };
 
@@ -21,6 +22,7 @@ const EMPTY: SiteSettings = {
   accentColor: "",
   accentInk: "",
   pageBackground: "",
+  fontUrl: "",
   customCss: "",
 };
 
@@ -43,6 +45,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       accentColor: row.accentColor,
       accentInk: row.accentInk,
       pageBackground: row.pageBackground,
+      fontUrl: row.fontUrl,
       customCss: row.customCss,
     };
   } catch (err) {
@@ -72,6 +75,27 @@ export function buildColorOverrideCss(settings: SiteSettings): string {
   }
   if (decls.length === 0) return "";
   return `:root{${decls.join("")}}`;
+}
+
+const FONT_FORMATS: Record<string, string> = {
+  woff2: "woff2",
+  woff: "woff",
+  ttf: "truetype",
+  otf: "opentype",
+};
+
+/**
+ * Builds an @font-face + --font-custom override for an uploaded font, or ""
+ * if none is set. fontUrl is always our own server-generated "/uploads/..."
+ * path (see lib/uploads.ts) with a validated extension, never arbitrary
+ * user-typed text, so interpolating it into CSS here is safe.
+ */
+export function buildFontFaceCss(settings: SiteSettings): string {
+  if (!settings.fontUrl) return "";
+  const ext = settings.fontUrl.split(".").pop()?.toLowerCase() || "";
+  const format = FONT_FORMATS[ext];
+  if (!format) return "";
+  return `@font-face{font-family:'CustomFont';src:url('${settings.fontUrl}') format('${format}');font-display:swap;}:root{--font-custom:'CustomFont';}`;
 }
 
 /** Neutralizes a literal "</style" so custom CSS can't prematurely close the <style> tag it's injected into. */

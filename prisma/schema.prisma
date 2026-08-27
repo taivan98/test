@@ -149,6 +149,7 @@ model SiteSettings {
   accentColor     String   @default("")
   accentInk       String   @default("")
   pageBackground  String   @default("")
+  fontUrl         String   @default("")
   customCss       String   @default("")
   updatedAt       DateTime @updatedAt
 }

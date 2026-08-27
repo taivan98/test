@@ -41,6 +41,10 @@ yarn-error.log*
 /prisma/*.db
 /prisma/*.db-journal
 
+# admin-uploaded branding assets (logo/favicon/OG image/font), local dev only —
+# in production these live on the persistent volume, next to the database
+/uploads/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

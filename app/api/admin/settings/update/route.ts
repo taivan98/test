@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/adminGuard";
-import { updateSiteSettings } from "@/lib/settings";
+import { getSiteSettings, updateSiteSettings } from "@/lib/settings";
+import { deleteUploadByServingPath } from "@/lib/uploads";
 
 const MAX_CUSTOM_CSS_LENGTH = 20000;
 const MAX_NAME_LENGTH = 120;
-
-function readUrl(form: FormData, name: string): string {
-  const raw = String(form.get(name) || "").trim();
-  return /^https?:\/\//i.test(raw) ? raw : "";
-}
 
 function readHexColor(form: FormData, name: string): string {
   const raw = String(form.get(name) || "").trim();
@@ -21,8 +17,15 @@ export async function POST(req: NextRequest) {
   if (guard) return guard;
 
   const form = await req.formData();
+  const current = await getSiteSettings();
 
   if (form.get("reset")) {
+    await Promise.all([
+      deleteUploadByServingPath(current.logoUrl),
+      deleteUploadByServingPath(current.faviconUrl),
+      deleteUploadByServingPath(current.ogImageUrl),
+      deleteUploadByServingPath(current.fontUrl),
+    ]);
     await updateSiteSettings({
       conferenceName: "",
       logoUrl: "",
@@ -31,15 +34,16 @@ export async function POST(req: NextRequest) {
       accentColor: "",
       accentInk: "",
       pageBackground: "",
+      fontUrl: "",
       customCss: "",
     });
     return NextResponse.redirect(new URL("/admin/branding?done=reset", origin));
   }
 
+  // This form only edits text/color fields — logo/favicon/OG-image/font are
+  // uploaded through separate forms (see /api/admin/settings/upload), so
+  // carry those over unchanged from the current settings.
   const conferenceName = String(form.get("conferenceName") || "").trim().slice(0, MAX_NAME_LENGTH);
-  const logoUrl = readUrl(form, "logoUrl");
-  const faviconUrl = readUrl(form, "faviconUrl");
-  const ogImageUrl = readUrl(form, "ogImageUrl");
   const accentColor = readHexColor(form, "accentColor");
   const pageBackground = readHexColor(form, "pageBackground");
 
@@ -49,10 +53,8 @@ export async function POST(req: NextRequest) {
   const customCss = String(form.get("customCss") || "").slice(0, MAX_CUSTOM_CSS_LENGTH);
 
   await updateSiteSettings({
+    ...current,
     conferenceName,
-    logoUrl,
-    faviconUrl,
-    ogImageUrl,
     accentColor,
     accentInk,
     pageBackground,
