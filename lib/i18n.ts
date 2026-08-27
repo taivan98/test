@@ -60,7 +60,7 @@ export const dictionaries: Record<Locale, Dict> = {
     "session.registering": "Prijavljujem…",
     "session.cancel": "Odjavi se s radionice",
     "session.cancelling": "Odjavljujem…",
-    "session.joinWaitlist": "Pridruži se listi čekanja",
+    "session.joinWaitlist": "Prijavi se na red čekanja",
     "session.leaveWaitlist": "Napusti listu čekanja",
     "session.waitlistPosition": "Na listi čekanja · {position}. mjesto",
     "session.blockConflict":

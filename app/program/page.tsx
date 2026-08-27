@@ -5,10 +5,13 @@ import { getLocale } from "@/lib/locale";
 import { getProgram } from "@/lib/program";
 import { zagrebDateKey } from "@/lib/scheduleTime";
 import { t } from "@/lib/i18n";
-import { capacityStatus } from "@/lib/status";
+import { capacityStatus, capacityColor } from "@/lib/status";
 import { Header } from "@/components/Header";
-import { StatusChip } from "@/components/StatusChip";
 import { CapacityBar } from "@/components/CapacityBar";
+
+const SEAT_TEXT_CLASS = { good: "text-good", warn: "text-warn", bad: "text-bad" };
+const ACTION_BUTTON_CLASS =
+  "shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition whitespace-nowrap";
 
 export default async function ProgramPage({
   searchParams,
@@ -75,6 +78,7 @@ export default async function ProgramPage({
                 const blockedByOther =
                   item.registrationRequired && !!block.myBlockPick && block.myBlockPick.id !== item.id;
                 const showFullNotice = msg === "full" && msgItemId === item.id;
+                const seatColor = item.capacity != null ? SEAT_TEXT_CLASS[capacityColor(item.confirmedCount, item.capacity)] : "";
                 return (
                   <div
                     key={item.id}
@@ -82,128 +86,111 @@ export default async function ProgramPage({
                       blockedByOther ? "bg-paper-dim border-border opacity-70" : "bg-paper-card border-border"
                     }`}
                   >
-                    <Link href={`/sessions/${item.id}`} className="block">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          {kind && (
-                            <div className="text-[10.5px] font-mono uppercase tracking-wide text-accent mb-0.5">
-                              {kind}
-                            </div>
-                          )}
-                          <div className="font-semibold text-[15px]">{title}</div>
-                          {(item.room || item.speaker) && (
-                            <div className="text-xs text-ink-dim mt-0.5 flex flex-wrap gap-x-1.5">
-                              {item.room && <span>{item.room}</span>}
-                              {item.room && item.speaker && <span>·</span>}
-                              {item.speaker && <span>{item.speaker}</span>}
-                            </div>
-                          )}
-                        </div>
-                        {blockedByOther ? (
-                          <span className="shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-paper-dim text-ink-dim border border-border">
-                            {t(locale, "program.blockTaken")}
-                          </span>
-                        ) : item.registrationRequired ? (
-                          <StatusChip status={status} locale={locale} />
-                        ) : (
-                          <span className="shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-paper-dim text-ink-dim">
-                            {t(locale, "session.noRegistrationNeeded")}
-                          </span>
-                        )}
-                      </div>
-                      {item.registrationRequired && item.myStatus === "registered" && (
-                        <div className="text-xs text-good font-medium mt-2">
-                          ✓ {t(locale, "status.registered")}
-                        </div>
-                      )}
-                      {item.registrationRequired &&
-                        (item.myStatus === "waiting" || item.myStatus === "offered") && (
-                          <div className="text-xs text-warn font-medium mt-2">
-                            {item.myStatus === "waiting"
-                              ? t(locale, "session.waitlistPosition", { position: item.myWaitlistPosition ?? "?" })
-                              : t(locale, "status.waitlisted")}
+                    <div className="flex items-start justify-between gap-3">
+                      <Link href={`/sessions/${item.id}`} className="block min-w-0">
+                        {kind && (
+                          <div className="text-[10.5px] font-mono uppercase tracking-wide text-accent mb-0.5">
+                            {kind}
                           </div>
                         )}
-                      {item.registrationRequired && item.capacity != null && (
-                        <div className="mt-2.5 flex items-center gap-2">
-                          <div className="flex-1">
-                            <CapacityBar confirmedCount={item.confirmedCount} capacity={item.capacity} />
+                        <div className="font-semibold text-[15px]">{title}</div>
+                        {(item.room || item.speaker) && (
+                          <div className="text-xs text-ink-dim mt-0.5 flex flex-wrap gap-x-1.5">
+                            {item.room && <span>{item.room}</span>}
+                            {item.room && item.speaker && <span>·</span>}
+                            {item.speaker && <span>{item.speaker}</span>}
                           </div>
-                          <span className="text-[11px] text-ink-dim font-mono tabular-nums">
-                            {t(locale, "session.seatsLeft", { taken: item.confirmedCount, capacity: item.capacity })}
-                          </span>
-                        </div>
+                        )}
+                      </Link>
+
+                      {blockedByOther ? (
+                        <span className="shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-paper-dim text-ink-dim border border-border">
+                          {t(locale, "program.blockTaken")}
+                        </span>
+                      ) : !item.registrationRequired ? (
+                        <span className="shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-paper-dim text-ink-dim">
+                          {t(locale, "session.noRegistrationNeeded")}
+                        </span>
+                      ) : item.myStatus === "registered" ? (
+                        <form action="/api/registrations/cancel" method="POST">
+                          <input type="hidden" name="programItemId" value={item.id} />
+                          <input type="hidden" name="redirectTo" value={redirectTo} />
+                          <button
+                            type="submit"
+                            className={`${ACTION_BUTTON_CLASS} border border-border hover:bg-paper-dim`}
+                          >
+                            {t(locale, "session.cancel")}
+                          </button>
+                        </form>
+                      ) : item.myStatus === "waiting" || item.myStatus === "offered" ? (
+                        <form action="/api/waitlist/leave" method="POST">
+                          <input type="hidden" name="programItemId" value={item.id} />
+                          <input type="hidden" name="redirectTo" value={redirectTo} />
+                          <button
+                            type="submit"
+                            className={`${ACTION_BUTTON_CLASS} border border-border hover:bg-paper-dim`}
+                          >
+                            {t(locale, "session.leaveWaitlist")}
+                          </button>
+                        </form>
+                      ) : status === "full" ? (
+                        <form action="/api/waitlist/join" method="POST">
+                          <input type="hidden" name="programItemId" value={item.id} />
+                          <input type="hidden" name="redirectTo" value={redirectTo} />
+                          <button
+                            type="submit"
+                            className={`${ACTION_BUTTON_CLASS} border border-accent text-accent hover:bg-accent-soft`}
+                          >
+                            {t(locale, "session.joinWaitlist")}
+                          </button>
+                        </form>
+                      ) : (
+                        <form action="/api/registrations" method="POST">
+                          <input type="hidden" name="programItemId" value={item.id} />
+                          <input type="hidden" name="redirectTo" value={redirectTo} />
+                          <button type="submit" className={`${ACTION_BUTTON_CLASS} bg-accent text-accent-ink hover:opacity-90`}>
+                            {t(locale, "session.register")}
+                          </button>
+                        </form>
                       )}
-                    </Link>
-
-                    {showFullNotice && (
-                      <div className="mt-2.5 rounded-lg bg-warn-soft border border-warn/30 p-2.5 text-xs text-ink">
-                        {t(locale, "session.fullJoinWaitlist")}
-                      </div>
-                    )}
-
-                    {!blockedByOther && item.registrationRequired && (
-                      <div className="mt-3 flex flex-col gap-2">
-                        {item.myStatus === "registered" && (
-                          <form action="/api/registrations/cancel" method="POST">
-                            <input type="hidden" name="programItemId" value={item.id} />
-                            <input type="hidden" name="redirectTo" value={redirectTo} />
-                            <button
-                              type="submit"
-                              className="w-full rounded-lg border border-border py-2 text-sm font-semibold hover:bg-paper-dim transition"
-                            >
-                              {t(locale, "session.cancel")}
-                            </button>
-                          </form>
-                        )}
-                        {(item.myStatus === "waiting" || item.myStatus === "offered") && (
-                          <form action="/api/waitlist/leave" method="POST">
-                            <input type="hidden" name="programItemId" value={item.id} />
-                            <input type="hidden" name="redirectTo" value={redirectTo} />
-                            <button
-                              type="submit"
-                              className="w-full rounded-lg border border-border py-2 text-sm font-semibold hover:bg-paper-dim transition"
-                            >
-                              {t(locale, "session.leaveWaitlist")}
-                            </button>
-                          </form>
-                        )}
-                        {item.myStatus === "none" && status !== "full" && (
-                          <form action="/api/registrations" method="POST">
-                            <input type="hidden" name="programItemId" value={item.id} />
-                            <input type="hidden" name="redirectTo" value={redirectTo} />
-                            <button
-                              type="submit"
-                              className="w-full rounded-lg bg-accent text-accent-ink py-2 text-sm font-semibold hover:opacity-90 transition"
-                            >
-                              {t(locale, "session.register")}
-                            </button>
-                          </form>
-                        )}
-                        {item.myStatus === "none" && status === "full" && (
-                          <form action="/api/waitlist/join" method="POST">
-                            <input type="hidden" name="programItemId" value={item.id} />
-                            <input type="hidden" name="redirectTo" value={redirectTo} />
-                            <button
-                              type="submit"
-                              className="w-full rounded-lg border border-accent text-accent py-2 text-sm font-semibold hover:bg-accent-soft transition"
-                            >
-                              {t(locale, "session.joinWaitlist")}
-                            </button>
-                          </form>
-                        )}
-                      </div>
-                    )}
+                    </div>
 
                     {item.detailsUrl && (
                       <a
                         href={item.detailsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-2.5 inline-flex items-center gap-1 text-xs font-medium text-accent hover:underline"
+                        className="mt-1.5 inline-flex items-center gap-1 text-xs font-medium text-accent hover:underline"
                       >
                         {t(locale, "session.moreDetails")} ↗
                       </a>
+                    )}
+
+                    {item.registrationRequired && item.myStatus === "registered" && (
+                      <div className="text-xs text-good font-medium mt-2">✓ {t(locale, "status.registered")}</div>
+                    )}
+                    {item.registrationRequired && (item.myStatus === "waiting" || item.myStatus === "offered") && (
+                      <div className="text-xs text-warn font-medium mt-2">
+                        {item.myStatus === "waiting"
+                          ? t(locale, "session.waitlistPosition", { position: item.myWaitlistPosition ?? "?" })
+                          : t(locale, "status.waitlisted")}
+                      </div>
+                    )}
+                    {item.registrationRequired && item.capacity != null && (
+                      <div className="mt-2.5 flex items-center gap-2">
+                        <div className="flex-1">
+                          <CapacityBar confirmedCount={item.confirmedCount} capacity={item.capacity} />
+                        </div>
+                        <span className={`text-[11px] font-mono tabular-nums ${seatColor}`}>
+                          {t(locale, "session.seatsLeft", { taken: item.confirmedCount, capacity: item.capacity })}
+                        </span>
+                      </div>
+                    )}
+
+                    {showFullNotice && (
+                      <div className="mt-2.5 rounded-lg bg-warn-soft border border-warn/30 p-2.5 text-xs text-ink">
+                        {t(locale, "session.fullJoinWaitlist")}
+                      </div>
                     )}
                   </div>
                 );
