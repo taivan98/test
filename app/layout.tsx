@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { getSiteSettings, buildColorOverrideCss, escapeForStyleTag } from "@/lib/settings";
+
+const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter" });
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
@@ -27,7 +30,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   const customCss = escapeForStyleTag(settings.customCss);
 
   return (
-    <html lang="hr" className="h-full antialiased">
+    <html lang="hr" className={`h-full antialiased ${inter.variable}`}>
       <body className="min-h-full flex flex-col bg-paper text-ink">
         {colorCss && <style dangerouslySetInnerHTML={{ __html: colorCss }} />}
         {customCss && <style dangerouslySetInnerHTML={{ __html: customCss }} />}
