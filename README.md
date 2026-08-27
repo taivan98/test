@@ -52,6 +52,7 @@ Prvi organizatorski korak: otvori `/admin`, prijavi se s `ADMIN_PASSWORD` iz
 | `CONFERENCE_NAME` | Naziv prikazan u zaglavlju i naslovu stranice |
 | `CONTACT_EMAIL` | Prikazuje se ljudima čiji email nije na odobrenom popisu |
 | `SESSION_SECRET` | Slučajan string za potpisivanje kolačića sesije — generiraj s `openssl rand -hex 32` |
+| `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` | Mora ostati **isti kroz sve deployeve** — generiraj JEDNOM s `openssl rand -base64 32`, postavi na hostu i više ga ne mijenjaj. Bez ovoga svaki novi deploy tiho promijeni interni ključ, pa svatko tko ima stranicu već otvorenu u tabu dobije "Server action not found" čim nešto klikne, dok ne osvježi stranicu. |
 | `ADMIN_PASSWORD` | Lozinka za `/admin` |
 | `BREVO_API_KEY` | API ključ za [Brevo](https://brevo.com) (slanje e-mailova); prazno = ispis u konzolu |
 | `EMAIL_FROM` | Pošiljatelj e-mailova — mora odgovarati emailu koji je verificiran kao "sender" u Brevo računu, npr. `Konferencija <prijave@tvojadomena.hr>` |
