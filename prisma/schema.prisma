@@ -141,10 +141,14 @@ model AdminToken {
 // Single-row table (id is always "singleton") holding organizer-editable
 // branding: logo, accent color, and a free-text CSS escape hatch.
 model SiteSettings {
-  id          String   @id @default("singleton")
-  logoUrl     String   @default("")
-  accentColor String   @default("")
-  accentInk   String   @default("")
-  customCss   String   @default("")
-  updatedAt   DateTime @updatedAt
+  id              String   @id @default("singleton")
+  conferenceName  String   @default("")
+  logoUrl         String   @default("")
+  faviconUrl      String   @default("")
+  ogImageUrl      String   @default("")
+  accentColor     String   @default("")
+  accentInk       String   @default("")
+  pageBackground  String   @default("")
+  customCss       String   @default("")
+  updatedAt       DateTime @updatedAt
 }

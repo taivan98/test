@@ -12,6 +12,7 @@ export default async function BrandingPage({
   const { done } = await searchParams;
   const settings = await getSiteSettings();
   const accentColor = settings.accentColor || "#5b4fe8";
+  const pageBackground = settings.pageBackground || "#f4f5f8";
 
   return (
     <>
@@ -36,6 +37,20 @@ export default async function BrandingPage({
 
         <form action="/api/admin/settings/update" method="POST" className="flex flex-col gap-6">
           <div>
+            <label className="block text-sm font-medium mb-1.5">Naziv konferencije</label>
+            <input
+              type="text"
+              name="conferenceName"
+              defaultValue={settings.conferenceName}
+              placeholder={conferenceName}
+              className="w-full rounded-lg border border-border px-3 py-2 text-sm"
+            />
+            <p className="text-xs text-ink-dim mt-1">
+              Ostavi prazno da ostane "{conferenceName}" (zadano iz postavki hostinga).
+            </p>
+          </div>
+
+          <div>
             <label className="block text-sm font-medium mb-1.5">Logo (poveznica na sliku)</label>
             <input
               type="url"
@@ -47,6 +62,37 @@ export default async function BrandingPage({
             <p className="text-xs text-ink-dim mt-1">
               Zalijepi poveznicu na sliku (npr. iz medijske biblioteke na WordPress stranici). Ostavi
               prazno da nema loga, samo naziv konferencije.
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1.5">Favicon (sličica u tabu preglednika)</label>
+            <input
+              type="url"
+              name="faviconUrl"
+              defaultValue={settings.faviconUrl}
+              placeholder="https://hrdays.net/wp-content/uploads/favicon.png"
+              className="w-full rounded-lg border border-border px-3 py-2 text-sm"
+            />
+            <p className="text-xs text-ink-dim mt-1">
+              Poveznica na malu kvadratnu sliku (npr. 32×32 ili 64×64 piksela). Ostavi prazno za zadanu.
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1.5">
+              Slika za dijeljenje linka (društvene mreže)
+            </label>
+            <input
+              type="url"
+              name="ogImageUrl"
+              defaultValue={settings.ogImageUrl}
+              placeholder="https://hrdays.net/wp-content/uploads/najava.jpg"
+              className="w-full rounded-lg border border-border px-3 py-2 text-sm"
+            />
+            <p className="text-xs text-ink-dim mt-1">
+              Kad netko podijeli link na aplikaciju (Viber, LinkedIn, Facebook...), pokaže se ova
+              slika uz naslov. Preporučeno cca 1200×630 piksela.
             </p>
           </div>
 
@@ -76,6 +122,22 @@ export default async function BrandingPage({
             <p className="text-xs text-ink-dim mt-1">
               Ako izabereš svijetlu boju naglaska (npr. žutu), prebaci na tamni tekst da gumbi ostanu
               čitljivi.
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1.5">Boja pozadine stranice</label>
+            <div className="flex items-center gap-3">
+              <input
+                type="color"
+                name="pageBackground"
+                defaultValue={pageBackground}
+                className="h-10 w-16 rounded border border-border cursor-pointer"
+              />
+              <span className="text-xs text-ink-dim font-mono">{pageBackground}</span>
+            </div>
+            <p className="text-xs text-ink-dim mt-1">
+              Pozadina iza kartica, odvojena od boje gumba. Zadana je svijetlo siva.
             </p>
           </div>
 
@@ -111,7 +173,7 @@ export default async function BrandingPage({
         <form action="/api/admin/settings/update" method="POST" className="mt-4">
           <input type="hidden" name="reset" value="1" />
           <button type="submit" className="text-xs text-bad hover:underline">
-            Vrati sve na zadano (ukloni logo, boju i vlastiti CSS)
+            Vrati sve na zadano (ukloni naziv, logo, favicon, sliku, boje i vlastiti CSS)
           </button>
         </form>
       </main>

@@ -14,16 +14,17 @@ export async function Header({
   participantEmail?: string | null;
   conferenceName: string;
 }) {
-  const { logoUrl } = await getSiteSettings();
+  const settings = await getSiteSettings();
+  const displayName = settings.conferenceName || conferenceName;
   return (
     <header className="border-b border-border bg-paper-card">
       <div className="mx-auto max-w-2xl px-4 py-3 flex items-center justify-between gap-3">
         <Link href="/program" className="flex items-center gap-2 font-semibold text-[15px] truncate">
-          {logoUrl && (
+          {settings.logoUrl && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={logoUrl} alt="" className="h-7 w-auto rounded-sm object-contain" />
+            <img src={settings.logoUrl} alt="" className="h-7 w-auto rounded-sm object-contain" />
           )}
-          {conferenceName}
+          {displayName}
         </Link>
         <div className="flex items-center gap-4">
           {participantEmail && (

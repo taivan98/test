@@ -3,13 +3,26 @@ import { prisma } from "./db";
 const SETTINGS_ID = "singleton";
 
 export type SiteSettings = {
+  conferenceName: string;
   logoUrl: string;
+  faviconUrl: string;
+  ogImageUrl: string;
   accentColor: string;
   accentInk: string;
+  pageBackground: string;
   customCss: string;
 };
 
-const EMPTY: SiteSettings = { logoUrl: "", accentColor: "", accentInk: "", customCss: "" };
+const EMPTY: SiteSettings = {
+  conferenceName: "",
+  logoUrl: "",
+  faviconUrl: "",
+  ogImageUrl: "",
+  accentColor: "",
+  accentInk: "",
+  pageBackground: "",
+  customCss: "",
+};
 
 /**
  * Falls back to defaults on any DB error instead of throwing. Every page pulls
@@ -23,9 +36,13 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     const row = await prisma.siteSettings.findUnique({ where: { id: SETTINGS_ID } });
     if (!row) return EMPTY;
     return {
+      conferenceName: row.conferenceName,
       logoUrl: row.logoUrl,
+      faviconUrl: row.faviconUrl,
+      ogImageUrl: row.ogImageUrl,
       accentColor: row.accentColor,
       accentInk: row.accentInk,
+      pageBackground: row.pageBackground,
       customCss: row.customCss,
     };
   } catch (err) {
@@ -43,13 +60,16 @@ export async function updateSiteSettings(data: SiteSettings): Promise<void> {
 }
 
 /** Builds a `:root{...}` override block from validated settings, or "" if nothing to override. */
-export function buildAccentOverrideCss(settings: SiteSettings): string {
+export function buildColorOverrideCss(settings: SiteSettings): string {
   const decls: string[] = [];
   if (/^#[0-9a-fA-F]{6}$/.test(settings.accentColor)) {
     decls.push(`--accent:${settings.accentColor};`);
   }
   if (settings.accentInk === "dark") decls.push(`--accent-ink:#1b1d24;`);
   else if (settings.accentInk === "light") decls.push(`--accent-ink:#ffffff;`);
+  if (/^#[0-9a-fA-F]{6}$/.test(settings.pageBackground)) {
+    decls.push(`--paper:${settings.pageBackground};`);
+  }
   if (decls.length === 0) return "";
   return `:root{${decls.join("")}}`;
 }
