@@ -9,11 +9,13 @@ export async function AdminHeader({ conferenceName }: { conferenceName: string }
       <div className="mx-auto max-w-4xl px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-4">
           <Link href="/admin" className="flex items-center gap-2 font-semibold text-[15px]">
-            {settings.logoUrl && (
+            {settings.logoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={settings.logoUrl} alt="" className="h-7 w-auto rounded-sm object-contain" />
+              <img src={settings.logoUrl} alt={displayName} className="h-8 w-auto object-contain" />
+            ) : (
+              displayName
             )}
-            {displayName} <span className="text-ink-dim font-normal">· organizator</span>
+            <span className="text-ink-dim font-normal">· organizator</span>
           </Link>
         </div>
         <nav className="flex items-center gap-4 text-sm text-ink-dim">
