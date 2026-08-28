@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentParticipant } from "@/lib/auth";
 import { registerForItem, BlockConflictError, FullError, NotFoundError } from "@/lib/registrations";
+import { notifyPromotion } from "@/lib/notify";
 
 export async function POST(req: NextRequest) {
   const origin = process.env.APP_URL || new URL(req.url).origin;
@@ -13,7 +14,8 @@ export async function POST(req: NextRequest) {
   const backTo = new URL(redirectTo, origin);
 
   try {
-    await registerForItem(participant.id, programItemId);
+    const promotions = await registerForItem(participant.id, programItemId);
+    for (const promoted of promotions) await notifyPromotion(promoted, origin);
     backTo.searchParams.set("msg", "registered");
   } catch (err) {
     if (err instanceof FullError) {

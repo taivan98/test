@@ -39,28 +39,36 @@ async function findConfirmedConflict(
   return conflict?.programItem ?? null;
 }
 
-/** Registers a participant for an item, or throws FullError / BlockConflictError. */
-export async function registerForItem(participantId: string, programItemId: string) {
+/**
+ * Registers a participant for an item, or throws FullError / BlockConflictError.
+ * Also cancels any waitlist entry the participant holds for a *different* item
+ * in the same block — they can only use one slot per block, so continuing to
+ * wait for the other one would just delay the next person for no reason. The
+ * cancelled entries' promotions (if any) are returned so the caller can notify.
+ */
+export async function registerForItem(participantId: string, programItemId: string): Promise<PromotedOffer[]> {
   const item = await prisma.programItem.findUnique({ where: { id: programItemId } });
   if (!item || !item.registrationRequired) throw new NotFoundError();
 
   const existing = await prisma.registration.findUnique({
     where: { participantId_programItemId: { participantId, programItemId } },
   });
-  if (existing) return existing;
+  if (existing) return [];
 
   const conflict = await findConfirmedConflict(participantId, item.blockId, programItemId);
   if (conflict) throw new BlockConflictError(conflict.titleHr, conflict.titleEn);
 
   if (item.capacity != null) {
-    return prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx) => {
       const count = await tx.registration.count({ where: { programItemId } });
       if (count >= item.capacity!) throw new FullError();
       return tx.registration.create({ data: { participantId, programItemId } });
     });
+  } else {
+    await prisma.registration.create({ data: { participantId, programItemId } });
   }
 
-  return prisma.registration.create({ data: { participantId, programItemId } });
+  return cancelBlockWaitlistConflicts(participantId, item.blockId, programItemId);
 }
 
 export type PromotedOffer = {
@@ -104,6 +112,34 @@ async function promoteNext(programItemId: string): Promise<PromotedOffer | null>
     titleEn: item.titleEn,
     rawToken: raw,
   };
+}
+
+/** Cancels every WAITING/OFFERED entry the participant holds elsewhere in the block, promoting the next person each time. */
+async function cancelBlockWaitlistConflicts(
+  participantId: string,
+  blockId: string,
+  excludeProgramItemId: string
+): Promise<PromotedOffer[]> {
+  const entries = await prisma.waitlistEntry.findMany({
+    where: {
+      participantId,
+      status: { in: ["WAITING", "OFFERED"] },
+      programItem: { blockId, id: { not: excludeProgramItemId } },
+    },
+  });
+
+  const promotions: PromotedOffer[] = [];
+  for (const entry of entries) {
+    const wasOffered = entry.status === "OFFERED";
+    await prisma.waitlistEntry.update({
+      where: { id: entry.id },
+      data: { status: "CANCELLED", resolvedAt: new Date() },
+    });
+    if (!wasOffered) continue; // only an OFFERED entry was holding an open seat
+    const promoted = await promoteNext(entry.programItemId);
+    if (promoted) promotions.push(promoted);
+  }
+  return promotions;
 }
 
 /** Cancels a confirmed registration and, for capped workshops, offers the seat to the next waiter. */

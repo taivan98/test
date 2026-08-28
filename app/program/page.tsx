@@ -9,6 +9,7 @@ import { capacityStatus, capacityColor } from "@/lib/status";
 import { kindIcon } from "@/lib/display";
 import { Header } from "@/components/Header";
 import { CapacityBar } from "@/components/CapacityBar";
+import { ConfirmSubmitForm } from "@/components/ConfirmSubmitForm";
 
 const SEAT_TEXT_CLASS = { good: "text-good", warn: "text-warn", bad: "text-bad" };
 const ACTION_BUTTON_CLASS =
@@ -147,6 +148,18 @@ export default async function ProgramPage({
                             {t(locale, "session.joinWaitlist")}
                           </button>
                         </form>
+                      ) : block.myBlockWaitlist && block.myBlockWaitlist.id !== item.id ? (
+                        <ConfirmSubmitForm
+                          action="/api/registrations"
+                          confirmMessage={t(locale, "session.registerLeavesWaitlist", {
+                            title:
+                              locale === "hr" ? block.myBlockWaitlist.titleHr : block.myBlockWaitlist.titleEn,
+                          })}
+                          hiddenFields={{ programItemId: item.id, redirectTo }}
+                          buttonClassName={`${ACTION_BUTTON_CLASS} bg-accent text-accent-ink hover:opacity-90`}
+                        >
+                          {t(locale, "session.register")}
+                        </ConfirmSubmitForm>
                       ) : (
                         <form action="/api/registrations" method="POST">
                           <input type="hidden" name="programItemId" value={item.id} />
