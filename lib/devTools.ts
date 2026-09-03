@@ -54,3 +54,23 @@ export async function resetTestData(): Promise<ResetTestDataResult> {
   ]);
   return { participants: participants.count, approvedEmails: approvedEmails.count };
 }
+
+export type ResetProgramResult = {
+  days: number;
+  blocks: number;
+  programItems: number;
+};
+
+/**
+ * Wipes the entire program — days, blocks and sessions — plus every
+ * registration/waitlist entry tied to them, via cascading deletes. Completely
+ * independent of resetTestData: participants and approved emails are untouched.
+ */
+export async function resetProgramStructure(): Promise<ResetProgramResult> {
+  const [blocks, programItems] = await Promise.all([
+    prisma.block.count(),
+    prisma.programItem.count(),
+  ]);
+  const { count: days } = await prisma.day.deleteMany({});
+  return { days, blocks, programItems };
+}
